@@ -1,6 +1,6 @@
 ---
 title: Updates
-description: Development notes from the Tiledown demo site.
+description: Development notes from the TileDown demo site.
 weight: 30
 postList: true
 ---

@@ -4,6 +4,7 @@ date: 2026-05-27
 description: The service-form internals are tested, but the CLI still needs configuration loading.
 tags: Services, Contracts, Roadmap
 image: /assets/post-services.svg
+imageDark: /assets/post-services-dark.svg
 ---
 # Service Contracts Are Next
 

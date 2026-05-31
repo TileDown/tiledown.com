@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the public project website from Tiledown source content.
+# Build the public project website from TileDown source content.
 
 set -euo pipefail
 

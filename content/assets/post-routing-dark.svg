@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Routing post image in dark mode">
+  <rect width="800" height="520" fill="#000000"/>
+  <rect x="90" y="118" width="230" height="120" rx="20" fill="#082f49" stroke="#38bdf8" stroke-width="4"/>
+  <rect x="480" y="282" width="230" height="120" rx="20" fill="#064e3b" stroke="#34d399" stroke-width="4"/>
+  <path d="M330 180C430 180 420 342 470 342" fill="none" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>
+  <path d="M454 318l22 24-32 10" fill="none" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="126" y="190" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" fill="#e0f2fe">source folder</text>
+  <text x="512" y="354" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" fill="#dcfce7">public slug</text>
+</svg>

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Browser checks for the public Tiledown website."""
+"""Browser checks for the public TileDown website."""
 
 import os
 import sys
@@ -41,6 +41,34 @@ def click_center(page, locator):
     page.mouse.up()
 
 
+def assert_theme_image_pair(page, selector, expected_dark_src):
+    light = page.locator(f"{selector} .td-theme-image-light").first
+    dark = page.locator(f"{selector} .td-theme-image-dark").first
+    expect(dark).to_be_visible()
+    expect(light).not_to_be_visible()
+
+    actual_src = dark.get_attribute("src")
+    require(actual_src == expected_dark_src, f"Expected {expected_dark_src}, got {actual_src}")
+
+    sizes = page.eval_on_selector_all(
+        f"{selector} img",
+        """(imgs) => imgs.map((img) => ({
+            src: img.getAttribute("src"),
+            complete: img.complete,
+            width: img.naturalWidth,
+            height: img.naturalHeight
+        }))""",
+    )
+    require(len(sizes) == 2, f"Expected image pair for {selector}, got {len(sizes)}")
+    for size in sizes:
+        require(size["complete"], f"Image did not finish loading: {size['src']}")
+        require(size["width"] > 0 and size["height"] > 0, f"Image has no natural size: {size['src']}")
+    require(
+        sizes[0]["width"] == sizes[1]["width"] and sizes[0]["height"] == sizes[1]["height"],
+        f"Theme image sizes differ: {sizes}",
+    )
+
+
 def main():
     checks = 0
     with sync_playwright() as playwright:
@@ -49,9 +77,15 @@ def main():
         page.emulate_media(color_scheme="light")
 
         page.goto(f"{BASE_URL}/", wait_until="networkidle")
-        expect(page).to_have_title("Tiledown")
+        expect(page).to_have_title("TileDown")
         checks += 1
-        pass_check("home title", "Tiledown")
+        pass_check("home title", "TileDown")
+
+        visible_copy = page.locator("body").inner_text()
+        require("Tiledown" not in visible_copy, "Visible copy uses old Tiledown capitalization")
+        expect(page.locator(".td-built")).to_have_text("Built with TileDown")
+        checks += 1
+        pass_check("visible copy uses TileDown brand")
 
         broken_images = page.eval_on_selector_all(
             "img",
@@ -86,6 +120,7 @@ def main():
         require(theme == "dark", f"Expected dark theme after light-mode toggle, got {theme}")
         expect(dark_hero).to_be_visible()
         expect(light_hero).not_to_be_visible()
+        assert_theme_image_pair(page, ".td-theme-image.td-hero", "/assets/site-preview-dark.svg")
         checks += 1
         pass_check("theme image switches dark")
 
@@ -94,6 +129,32 @@ def main():
         require(page.locator(".td-callout").count() >= 1, "Feature page has no callout")
         checks += 1
         pass_check("feature page renders callout")
+
+        themed_routes = [
+            ("/features/", "Feature Tour", "/assets/feature-tour-dark.svg"),
+            ("/docs/", "Docs", "/assets/docs-preview-dark.svg"),
+            ("/posts/browser-visible-tiles/", "Browser-Visible Tiles", "/assets/post-tiles-dark.svg"),
+            ("/posts/linux-first-builds/", "Linux-First Builds", "/assets/post-linux-dark.svg"),
+            ("/posts/markdown-canonical-source/", "Markdown as Canonical Source", "/assets/post-markdown-dark.svg"),
+            ("/posts/reference-routing/", "Slug Overrides and References", "/assets/post-routing-dark.svg"),
+            ("/posts/service-contracts/", "Service Contracts Are Next", "/assets/post-services-dark.svg"),
+        ]
+        for path, title, dark_src in themed_routes:
+            page.goto(f"{BASE_URL}{path}", wait_until="networkidle")
+            expect(page.locator("h1").first).to_have_text(title)
+            assert_theme_image_pair(page, ".td-theme-image.td-hero", dark_src)
+        checks += 1
+        pass_check("demo hero images switch dark", f"{len(themed_routes)} routes")
+
+        page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
+        card_pairs = page.locator(".td-post-card .td-theme-image")
+        card_pair_count = card_pairs.count()
+        require(card_pair_count >= 5, f"Expected post card image pairs, got {card_pair_count}")
+        for index in range(card_pair_count):
+            expect(card_pairs.nth(index).locator(".td-theme-image-dark")).to_be_visible()
+            expect(card_pairs.nth(index).locator(".td-theme-image-light")).not_to_be_visible()
+        checks += 1
+        pass_check("post card images switch dark", f"{card_pair_count} cards")
 
         page.goto(f"{BASE_URL}/tags/", wait_until="networkidle")
         expect(page.locator("h1").first).to_have_text("Tags")

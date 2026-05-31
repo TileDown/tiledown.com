@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Tile post image in dark mode">
+  <rect width="800" height="520" fill="#000000"/>
+  <rect x="118" y="104" width="220" height="220" rx="28" fill="#111827" stroke="#f59e0b" stroke-width="6"/>
+  <rect x="462" y="104" width="220" height="220" rx="28" fill="#111827" stroke="#60a5fa" stroke-width="6"/>
+  <text x="166" y="220" font-family="ui-sans-serif, system-ui, sans-serif" font-size="34" font-weight="700" fill="#fef3c7">callout</text>
+  <text x="520" y="220" font-family="ui-sans-serif, system-ui, sans-serif" font-size="34" font-weight="700" fill="#dbeafe">counter</text>
+  <rect x="220" y="378" width="360" height="26" rx="13" fill="#f59e0b"/>
+</svg>
