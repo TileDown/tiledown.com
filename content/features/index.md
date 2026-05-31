@@ -62,3 +62,10 @@ generate tag filter pages.
 The build also copies assets verbatim, writes one shared `styles.css`, creates
 redirect shim pages for configured outbound links, and excludes `draft: true`
 pages from the published output.
+
+## Tag AND filtering
+
+Generated tag pages are static URLs. Start with the [Markdown tag](/tags/markdown/)
+and select Swift to narrow the listing to [Markdown AND Swift](/tags/markdown/swift/).
+Selected tags stay visible in the tag bar, and clicking one removes it from the
+current filter.

@@ -20,6 +20,27 @@ def require(condition, message):
         raise AssertionError(message)
 
 
+def click_center(page, locator):
+    locator.wait_for(state="visible")
+    locator.scroll_into_view_if_needed()
+    box = locator.bounding_box()
+    require(box is not None, "Click target has no bounding box")
+    x = box["x"] + box["width"] / 2
+    y = box["y"] + box["height"] / 2
+    handle = locator.element_handle()
+    receives_click = handle.evaluate(
+        """(element, point) => {
+            const hit = document.elementFromPoint(point.x, point.y);
+            return hit === element || element.contains(hit);
+        }""",
+        {"x": x, "y": y},
+    )
+    require(receives_click, "Click target is covered at its center")
+    page.mouse.move(x, y)
+    page.mouse.down()
+    page.mouse.up()
+
+
 def main():
     checks = 0
     with sync_playwright() as playwright:
@@ -71,6 +92,20 @@ def main():
         expect(page.locator(".td-post-card")).to_have_count(1)
         checks += 1
         pass_check("tag filter page lists matching post")
+
+        page.goto(f"{BASE_URL}/tags/markdown/", wait_until="networkidle")
+        markdown_text = page.locator("body").inner_text()
+        require("Markdown as Canonical Source" in markdown_text, "Markdown tag missing Markdown post")
+        require("Slug Overrides and References" in markdown_text, "Markdown tag missing routing post")
+        click_center(page, page.locator(".td-tagbar").get_by_role("link", name="Swift").first)
+        page.wait_for_url("**/tags/markdown/swift/")
+        markdown_swift_text = page.locator("body").inner_text()
+        require("Markdown as Canonical Source" in markdown_swift_text, "Markdown AND Swift missing shared post")
+        require("Slug Overrides and References" not in markdown_swift_text, "Markdown AND Swift included Markdown-only post")
+        click_center(page, page.locator(".td-tagbar").get_by_role("link", name="Swift").first)
+        page.wait_for_url("**/tags/markdown/")
+        checks += 1
+        pass_check("tag AND chip flow narrows and removes")
 
         response = page.goto(f"{BASE_URL}/posts/reference-routing/", wait_until="networkidle")
         require(response and response.status == 200, "Slug override page did not render")
