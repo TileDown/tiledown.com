@@ -1,9 +1,10 @@
 ---
 title: Browser-Visible Tiles
 date: 2026-05-30
-description: Some Tiledown behavior only proves itself inside a browser.
+description: Some TileDown behavior only proves itself inside a browser.
 tags: Tiles, Browser, Testing
 image: /assets/post-tiles.svg
+imageDark: /assets/post-tiles-dark.svg
 ---
 # Browser-Visible Tiles
 

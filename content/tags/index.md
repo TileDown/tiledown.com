@@ -1,6 +1,6 @@
 ---
 title: Tags
-description: Browse Tiledown updates by tag.
+description: Browse TileDown updates by tag.
 weight: 40
 postList: true
 ---

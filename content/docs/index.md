@@ -1,12 +1,13 @@
 ---
 title: Docs
-description: Current commands, architecture, and status for Tiledown.
+description: Current commands, architecture, and status for TileDown.
 weight: 20
 image: /assets/docs-preview.svg
+imageDark: /assets/docs-preview-dark.svg
 ---
 # Docs
 
-Tiledown is a Swift package under `Packages/`. The engine is `TileKit`; the CLI is
+TileDown is a Swift package under `Packages/`. The engine is `TileKit`; the CLI is
 `tiledown`.
 
 ## Build this website

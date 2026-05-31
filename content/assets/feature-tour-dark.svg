@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="Feature tour preview in dark mode">
+  <rect width="1200" height="640" fill="#000000"/>
+  <rect x="96" y="80" width="1008" height="480" rx="28" fill="#111827" stroke="#334155"/>
+  <rect x="150" y="138" width="240" height="44" rx="12" fill="#60a5fa"/>
+  <rect x="150" y="214" width="360" height="18" rx="9" fill="#64748b"/>
+  <rect x="150" y="250" width="440" height="18" rx="9" fill="#475569"/>
+  <rect x="150" y="318" width="280" height="126" rx="20" fill="#082f49" stroke="#38bdf8" stroke-width="4"/>
+  <rect x="470" y="318" width="280" height="126" rx="20" fill="#451a03" stroke="#f59e0b" stroke-width="4"/>
+  <rect x="790" y="318" width="260" height="126" rx="20" fill="#4c0519" stroke="#f43f5e" stroke-width="4"/>
+  <text x="190" y="395" font-family="ui-sans-serif, system-ui, sans-serif" font-size="28" font-weight="700" fill="#e0f2fe">Markdown</text>
+  <text x="528" y="395" font-family="ui-sans-serif, system-ui, sans-serif" font-size="28" font-weight="700" fill="#fef3c7">Tiles</text>
+  <text x="846" y="395" font-family="ui-sans-serif, system-ui, sans-serif" font-size="28" font-weight="700" fill="#ffe4e6">Feeds</text>
+</svg>
