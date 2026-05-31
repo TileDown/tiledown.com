@@ -63,6 +63,12 @@ The build also copies assets verbatim, writes one shared `styles.css`, creates
 redirect shim pages for configured outbound links, and excludes `draft: true`
 pages from the published output.
 
+## Theme-aware page images
+
+Pages can pair `image` with `imageDark` in front matter. Built-in layouts use the
+pair for hero images and post-card thumbnails, switching with the same dark-mode
+rules as the site theme. The homepage image on this site uses that path.
+
 ## Tag AND filtering
 
 Generated tag pages are static URLs. Start with the [Markdown tag](/tags/markdown/)
