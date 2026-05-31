@@ -3,6 +3,7 @@ title: Feature Tour
 description: A live tour of the Tiledown features this site can exercise today.
 weight: 10
 image: /assets/feature-tour.svg
+imageDark: /assets/feature-tour-dark.svg
 ---
 # Feature Tour
 
@@ -37,6 +38,12 @@ swift run tiledown json ../Website/content/index.md ../.build/home.json
 | Redirects | [Design notes](link:design) goes through `/out/design/` |
 
 ![Tiledown mark](/assets/tiledown-mark.svg)
+
+## Theme-aware page images
+
+This page declares both `image` and `imageDark` in its front matter. Tiledown
+uses the pair for the page hero and post-card thumbnail, so screenshots and
+diagrams can match the active light or dark site theme.
 
 ## Typed tiles
 

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="Dark feature tour preview">
+  <rect width="1200" height="640" fill="#020617"/>
+  <rect x="84" y="72" width="1032" height="496" rx="28" fill="#0f172a" stroke="#334155"/>
+  <text x="124" y="146" font-family="ui-sans-serif, system-ui, sans-serif" font-size="42" font-weight="700" fill="#f8fafc">Feature tour</text>
+  <rect x="124" y="184" width="420" height="18" rx="9" fill="#64748b"/>
+  <rect x="124" y="220" width="330" height="18" rx="9" fill="#475569"/>
+  <rect x="124" y="296" width="278" height="98" rx="16" fill="#082f49" stroke="#06b6d4" stroke-width="4"/>
+  <text x="154" y="348" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="700" fill="#e0f2fe">callout tile</text>
+  <rect x="444" y="296" width="278" height="98" rx="16" fill="#1e1b4b" stroke="#6366f1" stroke-width="4"/>
+  <text x="474" y="348" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="700" fill="#e0e7ff">counter tile</text>
+  <rect x="764" y="296" width="278" height="98" rx="16" fill="#14532d" stroke="#22c55e" stroke-width="4"/>
+  <text x="794" y="348" font-family="ui-sans-serif, system-ui, sans-serif" font-size="24" font-weight="700" fill="#dcfce7">tags and feeds</text>
+  <rect x="124" y="456" width="918" height="1" fill="#334155"/>
+  <rect x="124" y="496" width="200" height="34" rx="17" fill="#0c4a6e"/>
+  <rect x="350" y="496" width="200" height="34" rx="17" fill="#14532d"/>
+  <rect x="576" y="496" width="200" height="34" rx="17" fill="#713f12"/>
+</svg>

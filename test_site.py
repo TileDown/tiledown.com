@@ -25,6 +25,7 @@ def main():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         page = browser.new_page(viewport={"width": 1280, "height": 900})
+        page.emulate_media(color_scheme="light")
 
         page.goto(f"{BASE_URL}/", wait_until="networkidle")
         expect(page).to_have_title("Tiledown")
@@ -39,6 +40,13 @@ def main():
         checks += 1
         pass_check("home images load", "0 broken")
 
+        light_hero = page.locator(".td-theme-image.td-hero .td-theme-image-light")
+        dark_hero = page.locator(".td-theme-image.td-hero .td-theme-image-dark")
+        expect(light_hero).to_be_visible()
+        expect(dark_hero).not_to_be_visible()
+        checks += 1
+        pass_check("light hero image renders")
+
         counter = page.locator("[data-td-counter]").first
         value = counter.locator("[data-td-counter-value]")
         expect(value).to_have_text("0")
@@ -51,8 +59,13 @@ def main():
         page.locator("[data-td-theme-toggle]").click()
         theme = page.locator("html").get_attribute("data-theme")
         require(theme in ["dark", "light"], f"Unexpected theme value: {theme}")
+        require(theme == "dark", f"Expected first toggle to select dark, got {theme}")
+        expect(dark_hero).to_be_visible()
+        expect(light_hero).not_to_be_visible()
         checks += 1
         pass_check("theme toggle sets data-theme", theme)
+        checks += 1
+        pass_check("dark hero image renders")
 
         page.goto(f"{BASE_URL}/features/", wait_until="networkidle")
         expect(page.locator("h1")).to_have_text("Feature Tour")
