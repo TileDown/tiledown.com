@@ -1,0 +1,59 @@
+name: Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build website
+    runs-on: ubuntu-latest
+    container: swift:6.1
+    steps:
+      - name: Checkout website
+        uses: actions/checkout@v6
+      - name: Checkout Tiledown
+        uses: actions/checkout@v6
+        with:
+          repository: TileDown/tile-down
+          path: tile-down
+      - name: Install Playwright
+        run: |
+          apt-get update
+          apt-get install -y curl lsof python3 python3-pip
+          python3 -m pip install --break-system-packages playwright || python3 -m pip install playwright
+          python3 -m playwright install --with-deps chromium
+      - name: Check website
+        run: |
+          PYTHON=python3 TILEDOWN_REPO="$GITHUB_WORKSPACE/tile-down" scripts/check.sh
+      - name: Build Pages artifact
+        run: |
+          TILEDOWN_REPO="$GITHUB_WORKSPACE/tile-down" scripts/build.sh .build/pages
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: .build/pages
+
+  deploy:
+    name: Deploy website
+    runs-on: ubuntu-latest
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

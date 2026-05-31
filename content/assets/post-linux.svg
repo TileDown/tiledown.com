@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Linux build post image">
+  <rect width="800" height="520" fill="#eef2ff"/>
+  <rect x="126" y="92" width="548" height="336" rx="24" fill="#111827"/>
+  <text x="174" y="170" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#a7f3d0">$ swift test</text>
+  <text x="174" y="230" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#93c5fd">Target: linux</text>
+  <text x="174" y="290" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="28" fill="#fef3c7">196 tests passed</text>
+  <rect x="174" y="344" width="340" height="22" rx="11" fill="#34d399"/>
+</svg>

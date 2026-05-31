@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Markdown post image">
+  <rect width="800" height="520" fill="#ecfeff"/>
+  <rect x="100" y="80" width="600" height="360" rx="26" fill="#ffffff" stroke="#67e8f9"/>
+  <text x="150" y="154" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="32" font-weight="700" fill="#0f172a"># Markdown</text>
+  <rect x="150" y="198" width="420" height="18" rx="9" fill="#94a3b8"/>
+  <rect x="150" y="238" width="500" height="18" rx="9" fill="#cbd5e1"/>
+  <rect x="150" y="304" width="250" height="64" rx="12" fill="#0f172a"/>
+  <text x="176" y="345" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="22" fill="#a7f3d0">fmt --check</text>
+</svg>

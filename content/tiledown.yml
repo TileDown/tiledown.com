@@ -1,0 +1,14 @@
+title: Tiledown
+layout: top-nav
+theme: system
+appearance: toggle
+rss: true
+rssPath: feed.xml
+rssTitle: Tiledown Updates
+rssDescription: Development notes for the Tiledown static site generator.
+latestPosts: 3
+postsLabel: Updates
+social.github: https://github.com/TileDown/tile-down
+links.repo: https://github.com/TileDown/tile-down
+links.design: https://github.com/TileDown/tile-down/blob/main/docs/DESIGN.md
+links.issues: https://github.com/TileDown/tile-down/issues
