@@ -4,6 +4,7 @@ date: 2026-05-28
 description: A source folder can publish at a different slug while references still resolve.
 tags: Routing, References, Markdown
 image: /assets/post-routing.svg
+imageDark: /assets/post-routing-dark.svg
 slug: posts/reference-routing
 ---
 # Slug Overrides and References

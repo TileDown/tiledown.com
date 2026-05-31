@@ -1,17 +1,18 @@
 ---
 title: Feature Tour
-description: A live tour of the Tiledown features this site can exercise today.
+description: A live tour of the TileDown features this site can exercise today.
 weight: 10
 image: /assets/feature-tour.svg
+imageDark: /assets/feature-tour-dark.svg
 ---
 # Feature Tour
 
-This page is intentionally built from ordinary Tiledown Markdown. It exists to
+This page is intentionally built from ordinary TileDown Markdown. It exists to
 exercise the user-facing features that already work in the CLI.
 
 ## Markdown source
 
-Tiledown parses CommonMark through Swift Markdown, then renders through TileKit.
+TileDown parses CommonMark through Swift Markdown, then renders through TileKit.
 Raw HTML is escaped by design, so source stays portable and editor-friendly.
 
 > The Markdown file remains the canonical source. The engine derives rendered
@@ -36,7 +37,7 @@ swift run tiledown json ../Website/content/index.md ../.build/home.json
 | Socials | [GitHub](social:github) resolves from `tiledown.yml` |
 | Redirects | [Design notes](link:design) goes through `/out/design/` |
 
-![Tiledown mark](/assets/tiledown-mark.svg)
+![TileDown mark](/assets/tiledown-mark.svg)
 
 ## Typed tiles
 
