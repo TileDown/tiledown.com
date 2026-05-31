@@ -17,6 +17,20 @@ cleanup() {
 }
 trap cleanup EXIT
 
+run_browser_checks() {
+  if "$PYTHON" - <<'PY' >/dev/null 2>&1
+import playwright.sync_api
+PY
+  then
+    BASE_URL="http://localhost:$PORT" "$PYTHON" "$ROOT/test_site.py"
+  elif command -v uv >/dev/null 2>&1; then
+    BASE_URL="http://localhost:$PORT" uv run --with playwright "$PYTHON" "$ROOT/test_site.py"
+  else
+    echo "Python Playwright is not installed. Install it for $PYTHON, or install uv for the ephemeral Playwright runner." >&2
+    exit 1
+  fi
+}
+
 "$ROOT/scripts/build.sh" "$OUT"
 
 test -f "$OUT/index.html"
@@ -41,4 +55,4 @@ for _ in $(seq 1 50); do
   sleep 0.1
 done
 
-BASE_URL="http://localhost:$PORT" "$PYTHON" "$ROOT/test_site.py"
+run_browser_checks
