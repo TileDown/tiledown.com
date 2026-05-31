@@ -2,6 +2,7 @@
 title: Tiledown
 description: A Swift static site generator with Markdown-canonical source and typed tiles.
 image: /assets/site-preview.png
+imageDark: /assets/site-preview-dark.svg
 latest: true
 ---
 # Tiledown
