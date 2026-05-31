@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="900" viewBox="0 0 1440 900" role="img" aria-label="Preview of a Tiledown generated website in dark mode">
+  <rect width="1440" height="900" fill="#000000"/>
+  <rect x="96" y="72" width="1248" height="756" rx="28" fill="#1c1c1e" stroke="#2c2c2e"/>
+  <rect x="96" y="72" width="1248" height="76" rx="28" fill="#0b1220"/>
+  <circle cx="140" cy="110" r="10" fill="#ff5f57"/>
+  <circle cx="174" cy="110" r="10" fill="#febc2e"/>
+  <circle cx="208" cy="110" r="10" fill="#28c840"/>
+  <rect x="256" y="94" width="616" height="32" rx="16" fill="#182235"/>
+  <text x="288" y="116" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#e5e7eb">www.tiledown.com</text>
+  <rect x="160" y="200" width="500" height="42" rx="8" fill="#e5edff"/>
+  <text x="184" y="229" font-family="ui-sans-serif, system-ui, sans-serif" font-size="26" font-weight="700" fill="#0f172a">Markdown source to typed tiles</text>
+  <rect x="160" y="274" width="520" height="18" rx="9" fill="#64748b"/>
+  <rect x="160" y="310" width="420" height="18" rx="9" fill="#475569"/>
+  <rect x="160" y="368" width="364" height="86" rx="16" fill="#082f49" stroke="#38bdf8" stroke-width="4"/>
+  <text x="188" y="402" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="700" fill="#e0f2fe">callout tile</text>
+  <rect x="188" y="422" width="280" height="16" rx="8" fill="#22d3ee"/>
+  <rect x="160" y="496" width="270" height="72" rx="18" fill="#2563eb"/>
+  <text x="196" y="541" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="700" fill="#ffffff">counter tile 02</text>
+  <rect x="740" y="204" width="424" height="464" rx="24" fill="#020617"/>
+  <rect x="780" y="248" width="260" height="22" rx="11" fill="#38bdf8"/>
+  <rect x="780" y="300" width="316" height="18" rx="9" fill="#64748b"/>
+  <rect x="780" y="342" width="256" height="18" rx="9" fill="#475569"/>
+  <rect x="780" y="408" width="84" height="84" rx="16" fill="#34d399"/>
+  <rect x="896" y="408" width="84" height="84" rx="16" fill="#f59e0b"/>
+  <rect x="1012" y="408" width="84" height="84" rx="16" fill="#f43f5e"/>
+  <rect x="780" y="548" width="316" height="18" rx="9" fill="#94a3b8"/>
+  <rect x="780" y="592" width="210" height="18" rx="9" fill="#64748b"/>
+  <rect x="160" y="636" width="980" height="1" fill="#334155"/>
+  <rect x="160" y="688" width="180" height="40" rx="20" fill="#082f49"/>
+  <rect x="364" y="688" width="180" height="40" rx="20" fill="#064e3b"/>
+  <rect x="568" y="688" width="180" height="40" rx="20" fill="#78350f"/>
+</svg>
