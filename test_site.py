@@ -69,6 +69,58 @@ def assert_theme_image_pair(page, selector, expected_dark_src):
     )
 
 
+def visible_image_box(page, selector):
+    return page.eval_on_selector(
+        selector,
+        """(root) => {
+            const images = Array.from(root.querySelectorAll("img"));
+            const visible = images.find((image) => {
+                const rect = image.getBoundingClientRect();
+                const style = getComputedStyle(image);
+                return style.display !== "none" && rect.width > 0 && rect.height > 0;
+            });
+            if (!visible) return null;
+            const rect = visible.getBoundingClientRect();
+            return {
+                top: rect.top,
+                bottom: rect.bottom,
+                width: rect.width,
+                height: rect.height,
+                objectFit: getComputedStyle(visible).objectFit
+            };
+        }""",
+    )
+
+
+def element_box(page, selector):
+    return page.eval_on_selector(
+        selector,
+        """(element) => {
+            const rect = element.getBoundingClientRect();
+            return {
+                top: rect.top,
+                bottom: rect.bottom,
+                width: rect.width,
+                height: rect.height,
+                marginBottom: parseFloat(getComputedStyle(element).marginBottom)
+            };
+        }""",
+    )
+
+
+def assert_home_hero_rhythm(page):
+    hero = element_box(page, ".td-theme-image.td-hero")
+    image = visible_image_box(page, ".td-theme-image.td-hero")
+    title = element_box(page, "h1")
+    require(image is not None, "Home hero has no visible image")
+
+    gap = title["top"] - hero["bottom"]
+    require(gap >= 64, f"Home hero/title gap is too small: {gap:.0f}px")
+    require(hero["marginBottom"] >= 64, f"Home hero margin is too small: {hero['marginBottom']:.0f}px")
+    require(image["objectFit"] == "contain", f"Home hero object-fit is {image['objectFit']}")
+    require(title["bottom"] <= page.viewport_size["height"], "Home title is pushed below the first viewport")
+
+
 def main():
     checks = 0
     with sync_playwright() as playwright:
@@ -99,8 +151,9 @@ def main():
         dark_hero = page.locator(".td-theme-image.td-hero .td-theme-image-dark")
         expect(light_hero).to_be_visible()
         expect(dark_hero).not_to_be_visible()
+        assert_home_hero_rhythm(page)
         checks += 1
-        pass_check("theme image starts light")
+        pass_check("theme image starts light with readable hero rhythm")
 
         counter = page.locator("[data-td-counter]").first
         value = counter.locator("[data-td-counter-value]")
@@ -120,9 +173,10 @@ def main():
         require(theme == "dark", f"Expected dark theme after light-mode toggle, got {theme}")
         expect(dark_hero).to_be_visible()
         expect(light_hero).not_to_be_visible()
+        assert_home_hero_rhythm(page)
         assert_theme_image_pair(page, ".td-theme-image.td-hero", "/assets/site-preview-dark.svg")
         checks += 1
-        pass_check("theme image switches dark")
+        pass_check("theme image switches dark with readable hero rhythm")
 
         page.goto(f"{BASE_URL}/features/", wait_until="networkidle")
         expect(page.locator("h1")).to_have_text("Feature Tour")
