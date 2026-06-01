@@ -211,8 +211,17 @@ def main():
         page.goto(f"{BASE_URL}/features/", wait_until="networkidle")
         expect(page.locator("h1")).to_have_text("Feature Tour")
         require(page.locator(".td-callout").count() >= 1, "Feature page has no callout")
+        mark = page.locator('img[alt="TileDown mark"]').first
+        expect(mark).to_be_visible()
+        mark_src = mark.get_attribute("src")
+        require(mark_src == "/assets/tiledown-mark.svg", f"Unexpected mark source: {mark_src}")
+        mark_svg = page.request.get(f"{BASE_URL}/assets/tiledown-mark.svg").text()
+        require(
+            '<rect width="256" height="256" rx="48" fill="#f8fafc"/>' in mark_svg,
+            "TileDown mark still uses a dark-only background",
+        )
         checks += 1
-        pass_check("feature page renders callout")
+        pass_check("feature page renders callout and light mark")
 
         themed_routes = [
             ("/features/", "Feature Tour", "/assets/feature-tour-dark.svg"),
