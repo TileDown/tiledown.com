@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Tag intersection demo image in dark mode">
+  <rect width="800" height="520" fill="#000000"/>
+  <rect x="84" y="76" width="632" height="368" rx="30" fill="#171717" stroke="#831843" stroke-width="2"/>
+  <rect x="128" y="120" width="142" height="46" rx="23" fill="#082f49" stroke="#38bdf8" stroke-width="3"/>
+  <rect x="296" y="120" width="160" height="46" rx="23" fill="#064e3b" stroke="#34d399" stroke-width="3"/>
+  <rect x="482" y="120" width="120" height="46" rx="23" fill="#451a03" stroke="#fbbf24" stroke-width="3"/>
+  <rect x="128" y="208" width="544" height="74" rx="18" fill="#262626" stroke="#52525b"/>
+  <rect x="162" y="232" width="230" height="18" rx="9" fill="#f8fafc"/>
+  <rect x="162" y="258" width="330" height="12" rx="6" fill="#64748b"/>
+  <rect x="128" y="316" width="544" height="74" rx="18" fill="#262626" stroke="#52525b"/>
+  <rect x="162" y="340" width="290" height="18" rx="9" fill="#f8fafc"/>
+  <rect x="162" y="366" width="250" height="12" rx="6" fill="#64748b"/>
+</svg>
