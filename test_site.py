@@ -194,6 +194,13 @@ def main():
         checks += 1
         pass_check("visible copy uses TileDown brand")
 
+        repo_link = page.get_by_role("link", name="github.com/TileDown/tile-down").first
+        expect(repo_link).to_be_visible()
+        require(repo_link.get_attribute("href") == "/out/repo/", "Homepage repo link does not route through link:repo")
+        require(can_receive_center_click(repo_link), "Homepage repo link center is covered")
+        checks += 1
+        pass_check("homepage exposes repository link")
+
         broken_images = page.eval_on_selector_all(
             "img",
             "(imgs) => imgs.filter((img) => !img.complete || img.naturalWidth === 0).map((img) => img.getAttribute('src'))",
