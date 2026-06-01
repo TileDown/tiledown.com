@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Tag intersection demo image">
+  <rect width="800" height="520" fill="#fdf2f8"/>
+  <rect x="84" y="76" width="632" height="368" rx="30" fill="#ffffff" stroke="#fbcfe8" stroke-width="2"/>
+  <rect x="128" y="120" width="142" height="46" rx="23" fill="#e0f2fe" stroke="#0ea5e9" stroke-width="3"/>
+  <rect x="296" y="120" width="160" height="46" rx="23" fill="#dcfce7" stroke="#22c55e" stroke-width="3"/>
+  <rect x="482" y="120" width="120" height="46" rx="23" fill="#fef3c7" stroke="#f59e0b" stroke-width="3"/>
+  <rect x="128" y="208" width="544" height="74" rx="18" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="162" y="232" width="230" height="18" rx="9" fill="#0f172a"/>
+  <rect x="162" y="258" width="330" height="12" rx="6" fill="#94a3b8"/>
+  <rect x="128" y="316" width="544" height="74" rx="18" fill="#f8fafc" stroke="#cbd5e1"/>
+  <rect x="162" y="340" width="290" height="18" rx="9" fill="#0f172a"/>
+  <rect x="162" y="366" width="250" height="12" rx="6" fill="#94a3b8"/>
+</svg>

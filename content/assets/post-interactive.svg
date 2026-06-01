@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Interactive tile demo image">
+  <rect width="800" height="520" fill="#f0fdf4"/>
+  <rect x="82" y="74" width="636" height="372" rx="30" fill="#ffffff" stroke="#bbf7d0" stroke-width="2"/>
+  <rect x="128" y="118" width="250" height="92" rx="18" fill="#ecfeff" stroke="#06b6d4" stroke-width="4"/>
+  <rect x="156" y="148" width="152" height="18" rx="9" fill="#0f172a"/>
+  <rect x="156" y="180" width="172" height="14" rx="7" fill="#22d3ee"/>
+  <rect x="428" y="118" width="244" height="92" rx="18" fill="#eff6ff" stroke="#2563eb" stroke-width="4"/>
+  <circle cx="476" cy="164" r="26" fill="#2563eb"/>
+  <rect x="526" y="146" width="98" height="36" rx="18" fill="#dbeafe"/>
+  <rect x="128" y="258" width="544" height="86" rx="20" fill="#fff7ed" stroke="#f97316" stroke-width="4"/>
+  <rect x="158" y="286" width="312" height="18" rx="9" fill="#9a3412"/>
+  <rect x="158" y="318" width="226" height="12" rx="6" fill="#fdba74"/>
+  <rect x="128" y="382" width="130" height="24" rx="12" fill="#dcfce7"/>
+  <rect x="286" y="382" width="130" height="24" rx="12" fill="#dbeafe"/>
+  <rect x="444" y="382" width="130" height="24" rx="12" fill="#fce7f3"/>
+</svg>

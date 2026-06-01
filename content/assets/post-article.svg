@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Article layout demo image">
+  <rect width="800" height="520" fill="#f8fafc"/>
+  <rect x="78" y="58" width="644" height="404" rx="28" fill="#ffffff" stroke="#dbe3ef" stroke-width="2"/>
+  <rect x="126" y="106" width="130" height="20" rx="10" fill="#2563eb"/>
+  <rect x="126" y="148" width="430" height="24" rx="12" fill="#0f172a"/>
+  <rect x="126" y="188" width="360" height="16" rx="8" fill="#64748b"/>
+  <rect x="126" y="218" width="500" height="16" rx="8" fill="#cbd5e1"/>
+  <rect x="126" y="272" width="86" height="34" rx="17" fill="#e0f2fe" stroke="#38bdf8"/>
+  <rect x="226" y="272" width="118" height="34" rx="17" fill="#dcfce7" stroke="#34d399"/>
+  <rect x="358" y="272" width="100" height="34" rx="17" fill="#fce7f3" stroke="#db2777"/>
+  <rect x="126" y="342" width="548" height="2" rx="1" fill="#e2e8f0"/>
+  <rect x="126" y="374" width="110" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <rect x="250" y="374" width="150" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <rect x="414" y="374" width="124" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <rect x="552" y="374" width="82" height="36" rx="18" fill="#f1f5f9" stroke="#cbd5e1"/>
+</svg>

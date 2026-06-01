@@ -217,6 +217,10 @@ def main():
         themed_routes = [
             ("/features/", "Feature Tour", "/assets/feature-tour-dark.svg"),
             ("/docs/", "Docs", "/assets/docs-preview-dark.svg"),
+            ("/posts/default-article-style/", "Default Article Style", "/assets/post-article-dark.svg"),
+            ("/posts/interactive-tiles/", "Interactive Tiles", "/assets/post-interactive-dark.svg"),
+            ("/posts/tag-intersections/", "Tag Intersections", "/assets/post-tags-dark.svg"),
+            ("/posts/publishing-pipeline/", "Publishing Pipeline", "/assets/post-publishing-dark.svg"),
             ("/posts/browser-visible-tiles/", "Browser-Visible Tiles", "/assets/post-tiles-dark.svg"),
             ("/posts/linux-first-builds/", "Linux-First Builds", "/assets/post-linux-dark.svg"),
             ("/posts/markdown-canonical-source/", "Markdown as Canonical Source", "/assets/post-markdown-dark.svg"),
@@ -236,10 +240,27 @@ def main():
         checks += 1
         pass_check("article share links render and are tappable")
 
+        page.goto(f"{BASE_URL}/posts/default-article-style/", wait_until="networkidle")
+        default_article_text = page.locator("body").inner_text()
+        require("Default Article Style" in default_article_text, "Default article demo missing title")
+        require("Social share links are enabled once" in default_article_text, "Default article demo missing callout copy")
+        assert_article_share_links(page, "/posts/default-article-style/")
+        checks += 1
+        pass_check("default article demo renders")
+
+        page.goto(f"{BASE_URL}/posts/interactive-tiles/", wait_until="networkidle")
+        demo_counter = page.locator("[data-td-counter]").first
+        demo_value = demo_counter.locator("[data-td-counter-value]")
+        expect(demo_value).to_have_text("0")
+        demo_counter.locator("button").click()
+        expect(demo_value).to_have_text("1")
+        checks += 1
+        pass_check("interactive tile demo increments")
+
         page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
         card_pairs = page.locator(".td-post-card .td-theme-image")
         card_pair_count = card_pairs.count()
-        require(card_pair_count >= 5, f"Expected post card image pairs, got {card_pair_count}")
+        require(card_pair_count >= 9, f"Expected post card image pairs, got {card_pair_count}")
         for index in range(card_pair_count):
             expect(card_pairs.nth(index).locator(".td-theme-image-dark")).to_be_visible()
             expect(card_pairs.nth(index).locator(".td-theme-image-light")).not_to_be_visible()
@@ -254,9 +275,17 @@ def main():
 
         page.goto(f"{BASE_URL}/tags/tiles/", wait_until="networkidle")
         expect(page.locator("h1").first).to_have_text("Tiles")
-        expect(page.locator(".td-post-card")).to_have_count(1)
+        tiles_text = page.locator("body").inner_text()
+        require("Browser-Visible Tiles" in tiles_text, "Tiles tag missing browser post")
+        require("Interactive Tiles" in tiles_text, "Tiles tag missing interactive post")
         checks += 1
         pass_check("tag filter page lists matching post")
+
+        page.goto(f"{BASE_URL}/tags/taxonomy/", wait_until="networkidle")
+        expect(page.locator("h1").first).to_have_text("Taxonomy")
+        require("Tag Intersections" in page.locator("body").inner_text(), "Taxonomy tag missing intersection demo")
+        checks += 1
+        pass_check("tag intersections demo appears under Taxonomy")
 
         page.goto(f"{BASE_URL}/tags/markdown/", wait_until="networkidle")
         markdown_text = page.locator("body").inner_text()

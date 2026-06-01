@@ -22,7 +22,7 @@ jobs:
     steps:
       - name: Checkout website
         uses: actions/checkout@v6
-      - name: Checkout Tiledown
+      - name: Checkout TileDown
         uses: actions/checkout@v6
         with:
           repository: TileDown/tile-down
