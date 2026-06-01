@@ -1,9 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-label="TileDown mark">
-  <rect width="256" height="256" rx="48" fill="#f8fafc"/>
-  <rect x="4" y="4" width="248" height="248" rx="44" fill="none" stroke="#dbe3ef" stroke-width="8"/>
-  <rect x="48" y="48" width="68" height="68" rx="14" fill="#38bdf8"/>
-  <rect x="140" y="48" width="68" height="68" rx="14" fill="#34d399"/>
-  <rect x="48" y="140" width="68" height="68" rx="14" fill="#f59e0b"/>
-  <rect x="140" y="140" width="68" height="68" rx="14" fill="#f43f5e"/>
-  <path d="M116 82h24M82 116v24M140 174h-24M174 140v-24" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
+  <defs>
+    <filter id="tile-shadow" x="-16" y="-16" width="288" height="288" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="#020617" flood-opacity="0.22"/>
+    </filter>
+    <linearGradient id="blue-tile" x1="40" y1="36" x2="104" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#56ccf2"/>
+      <stop offset="1" stop-color="#2f80ed"/>
+    </linearGradient>
+    <linearGradient id="green-tile" x1="152" y1="36" x2="216" y2="108" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#6ee7b7"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="amber-tile" x1="40" y1="148" x2="104" y2="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fbbf24"/>
+      <stop offset="1" stop-color="#f97316"/>
+    </linearGradient>
+    <linearGradient id="rose-tile" x1="152" y1="148" x2="216" y2="220" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#fb7185"/>
+      <stop offset="1" stop-color="#e11d48"/>
+    </linearGradient>
+  </defs>
+  <g filter="url(#tile-shadow)">
+    <path d="M103 72h50M72 103v50M153 184h-50M184 153v-50" fill="none" stroke="#0f172a" stroke-width="22" stroke-linecap="round" opacity="0.34"/>
+    <path d="M103 72h50M72 103v50M153 184h-50M184 153v-50" fill="none" stroke="#ffffff" stroke-width="14" stroke-linecap="round"/>
+    <rect x="36" y="36" width="72" height="72" rx="18" fill="url(#blue-tile)"/>
+    <rect x="148" y="36" width="72" height="72" rx="18" fill="url(#green-tile)"/>
+    <rect x="36" y="148" width="72" height="72" rx="18" fill="url(#amber-tile)"/>
+    <rect x="148" y="148" width="72" height="72" rx="18" fill="url(#rose-tile)"/>
+  </g>
 </svg>
