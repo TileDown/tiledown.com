@@ -41,6 +41,36 @@ def click_center(page, locator):
     page.mouse.up()
 
 
+def can_receive_center_click(locator):
+    locator.wait_for(state="visible")
+    locator.scroll_into_view_if_needed()
+    box = locator.bounding_box()
+    if box is None:
+        return False
+    x = box["x"] + box["width"] / 2
+    y = box["y"] + box["height"] / 2
+    handle = locator.element_handle()
+    return handle.evaluate(
+        """(element, point) => {
+            const hit = document.elementFromPoint(point.x, point.y);
+            return hit === element || element.contains(hit);
+        }""",
+        {"x": x, "y": y},
+    )
+
+
+def assert_article_share_links(page, expected_path):
+    links = page.eval_on_selector_all(
+        ".td-article-share a",
+        "els => els.map((el) => [el.textContent, el.getAttribute('href'), el.getAttribute('target'), el.getAttribute('rel')])",
+    )
+    require([item[0] for item in links] == ["X", "LinkedIn", "Facebook", "Email"], f"Unexpected share links: {links}")
+    require(all(item[2] == "_blank" and item[3] == "noopener" for item in links), f"Unsafe share attrs: {links}")
+    encoded_path = expected_path.replace("/", "%2F")
+    require(encoded_path in links[0][1], f"Share URL missing article path: {links[0][1]}")
+    require(can_receive_center_click(page.locator(".td-article-share a").first), "Share link center is covered")
+
+
 def assert_theme_image_pair(page, selector, expected_dark_src):
     light = page.locator(f"{selector} .td-theme-image-light").first
     dark = page.locator(f"{selector} .td-theme-image-dark").first
@@ -199,6 +229,12 @@ def main():
             assert_theme_image_pair(page, ".td-theme-image.td-hero", dark_src)
         checks += 1
         pass_check("demo hero images switch dark", f"{len(themed_routes)} routes")
+
+        page.goto(f"{BASE_URL}/posts/browser-visible-tiles/", wait_until="networkidle")
+        expect(page.locator(".td-article")).to_be_visible()
+        assert_article_share_links(page, "/posts/browser-visible-tiles/")
+        checks += 1
+        pass_check("article share links render and are tappable")
 
         page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
         card_pairs = page.locator(".td-post-card .td-theme-image")

@@ -38,7 +38,8 @@ jobs:
           PYTHON=python3 TILEDOWN_REPO="$GITHUB_WORKSPACE/tile-down" scripts/check.sh
       - name: Build Pages artifact
         run: |
-          TILEDOWN_REPO="$GITHUB_WORKSPACE/tile-down" scripts/build.sh .build/pages
+          TILEDOWN_REPO="$GITHUB_WORKSPACE/tile-down" TILEDOWN_BASE_URL="https://tiledown.com" scripts/build.sh .build/pages
+          grep -q "https%3A%2F%2Ftiledown.com%2Fposts" .build/pages/posts/browser-visible-tiles/index.html
       - name: Configure Pages
         uses: actions/configure-pages@v6
       - name: Upload artifact
