@@ -4,11 +4,12 @@ theme: system
 appearance: toggle
 rss: true
 rssPath: feed.xml
-rssTitle: TileDown Updates
+rssTitle: TileDown
 rssDescription: Development notes for the TileDown static site generator.
 latestPosts: 3
-postsLabel: Updates
+postsLabel: Capabilities
 shareLinks: true
+analytics.head: <style>.td-main>.td-theme-image[aria-label="TileDown"]+h1{margin-inline:auto;text-align:center;}</style>
 social.github: https://github.com/TileDown/tile-down
 links.repo: https://github.com/TileDown/tile-down
 links.design: https://github.com/TileDown/tile-down/blob/main/docs/DESIGN.md
