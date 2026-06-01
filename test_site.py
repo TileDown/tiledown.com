@@ -188,11 +188,33 @@ def main():
         checks += 1
         pass_check("home title", "TileDown")
 
+        home_title = page.locator("h1").first
+        title_alignment = home_title.evaluate(
+            """(title) => {
+                const titleRect = title.getBoundingClientRect();
+                const mainRect = document.querySelector(".td-main").getBoundingClientRect();
+                return {
+                    textAlign: getComputedStyle(title).textAlign,
+                    titleCenter: titleRect.left + titleRect.width / 2,
+                    mainCenter: mainRect.left + mainRect.width / 2
+                };
+            }""",
+        )
+        require(title_alignment["textAlign"] == "center", f"Homepage title is not centered: {title_alignment}")
+        require(
+            abs(title_alignment["titleCenter"] - title_alignment["mainCenter"]) <= 1,
+            f"Homepage title box is not centered: {title_alignment}",
+        )
+        checks += 1
+        pass_check("homepage title is centered")
+
         visible_copy = page.locator("body").inner_text()
         require("Tiledown" not in visible_copy, "Visible copy uses old Tiledown capitalization")
         expect(page.locator(".td-built")).to_have_text("Built with TileDown")
+        expect(page.locator(".td-nav").get_by_role("link", name="Capabilities")).to_be_visible()
+        require(page.locator(".td-nav").get_by_role("link", name="Updates").count() == 0, "Navigation still says Updates")
         checks += 1
-        pass_check("visible copy uses TileDown brand")
+        pass_check("visible copy uses TileDown brand and Capabilities nav")
 
         repo_link = page.get_by_role("link", name="github.com/TileDown/tile-down").first
         expect(repo_link).to_be_visible()
@@ -299,6 +321,7 @@ def main():
         pass_check("interactive tile demo increments")
 
         page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
+        expect(page.locator("h1").first).to_have_text("Capabilities")
         card_pairs = page.locator(".td-post-card .td-theme-image")
         card_pair_count = card_pairs.count()
         require(card_pair_count >= 9, f"Expected post card image pairs, got {card_pair_count}")
@@ -356,6 +379,8 @@ def main():
         require(feed.status == 200, f"Feed returned {feed.status}")
         feed_body = feed.text()
         require("<rss" in feed_body, "Feed is not RSS")
+        require("<title>TileDown</title>" in feed_body, "Feed title is not TileDown")
+        require("TileDown Blog" not in feed_body, "Feed title still says Blog")
         require("Browser-Visible Tiles" in feed_body, "Feed is missing a post")
         checks += 1
         pass_check("rss feed renders")
