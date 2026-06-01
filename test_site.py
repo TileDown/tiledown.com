@@ -138,6 +138,31 @@ def element_box(page, selector):
     )
 
 
+def sampled_image_pixel(locator, x_ratio, y_ratio):
+    locator.wait_for(state="visible")
+    return locator.evaluate(
+        """async (image, point) => {
+            if (!image.complete) {
+                await new Promise((resolve, reject) => {
+                    image.addEventListener("load", resolve, { once: true });
+                    image.addEventListener("error", reject, { once: true });
+                });
+            }
+            const width = image.naturalWidth;
+            const height = image.naturalHeight;
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0);
+            const x = Math.max(0, Math.min(width - 1, Math.round(width * point.x)));
+            const y = Math.max(0, Math.min(height - 1, Math.round(height * point.y)));
+            return Array.from(context.getImageData(x, y, 1, 1).data);
+        }""",
+        {"x": x_ratio, "y": y_ratio},
+    )
+
+
 def assert_home_hero_rhythm(page):
     hero = element_box(page, ".td-theme-image.td-hero")
     image = visible_image_box(page, ".td-theme-image.td-hero")
@@ -216,12 +241,12 @@ def main():
         mark_src = mark.get_attribute("src")
         require(mark_src == "/assets/tiledown-mark.svg", f"Unexpected mark source: {mark_src}")
         mark_svg = page.request.get(f"{BASE_URL}/assets/tiledown-mark.svg").text()
-        require(
-            '<rect width="256" height="256" rx="48" fill="#f8fafc"/>' in mark_svg,
-            "TileDown mark still uses a dark-only background",
-        )
+        require('width="256" height="256"' in mark_svg, "TileDown mark size changed")
+        require('rect width="256" height="256"' not in mark_svg, "TileDown mark still has a full background")
+        center_pixel = sampled_image_pixel(mark, 0.5, 0.5)
+        require(center_pixel[3] == 0, f"TileDown mark center is not transparent: {center_pixel}")
         checks += 1
-        pass_check("feature page renders callout and light mark")
+        pass_check("feature page renders callout and transparent mark")
 
         themed_routes = [
             ("/features/", "Feature Tour", "/assets/feature-tour-dark.svg"),
