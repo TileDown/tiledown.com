@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="Charts in Markdown demo image">
+  <rect width="800" height="520" fill="#f0fdf4"/>
+  <rect x="82" y="74" width="636" height="372" rx="30" fill="#ffffff" stroke="#bbf7d0" stroke-width="2"/>
+  <rect x="128" y="116" width="220" height="16" rx="8" fill="#0f172a"/>
+  <rect x="128" y="146" width="150" height="12" rx="6" fill="#22d3ee"/>
+  <line x1="150" y1="402" x2="650" y2="402" stroke="#94a3b8" stroke-width="3"/>
+  <rect x="170" y="290" width="62" height="112" rx="8" fill="#34c759"/>
+  <rect x="258" y="214" width="62" height="188" rx="8" fill="#22d3ee"/>
+  <rect x="346" y="318" width="62" height="84" rx="8" fill="#34c759"/>
+  <rect x="434" y="178" width="62" height="224" rx="8" fill="#22d3ee"/>
+  <rect x="522" y="250" width="62" height="152" rx="8" fill="#34c759"/>
+  <polyline points="201,290 289,214 377,318 465,178 553,250" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" opacity="0.55"/>
+</svg>
