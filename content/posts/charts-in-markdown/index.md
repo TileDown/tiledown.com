@@ -62,18 +62,10 @@ categories: Compiling, Waiting, Doom-scrolling
 series: Minutes = 3, 1, 26
 ```
 
-Everything above is a **static SVG** chart: zero shipped JavaScript. Hover any
-bar, point, or slice for a native tooltip. TileDown also renders the same data as
-an **interactive tile**, which opts into a small script for a styled tooltip that
-follows the cursor (charts are static by default; interactivity is a deliberate
-opt-in):
-
-:::chart
-type: bar
-title: Same data, now interactive
-labels: TileDown, Hugo, Jekyll, Bespoke PHP
-series.Happy devs: 92, 71, 64, 12
-:::
+Everything here is a **static SVG** chart: zero shipped JavaScript. Hover any
+bar, point, or slice for a native tooltip. When a chart needs richer hover
+behavior, TileDown offers an opt-in interactive version, covered in
+[Interactive Charts](post:interactive-charts).
 
 The figures are invented; the rendering, the dark mode, and the static-by-default
 output are real.
