@@ -53,5 +53,27 @@ y-label: joy
 series: Generators = (1, 9), (3, 7), (8, 3), (14, 1)
 ```
 
-Every figure above is invented for the demo. The rendering, the axes, the dark
-mode, and the lack of a single line of shipped JavaScript are real.
+A doughnut, because a hole improves morale:
+
+```chart
+type: doughnut
+title: Where the build minute goes
+categories: Compiling, Waiting, Doom-scrolling
+series: Minutes = 3, 1, 26
+```
+
+Everything above is a **static SVG** chart: zero shipped JavaScript. Hover any
+bar, point, or slice for a native tooltip. TileDown also renders the same data as
+an **interactive tile**, which opts into a small script for a styled tooltip that
+follows the cursor (charts are static by default; interactivity is a deliberate
+opt-in):
+
+:::chart
+type: bar
+title: Same data, now interactive
+labels: TileDown, Hugo, Jekyll, Bespoke PHP
+series.Happy devs: 92, 71, 64, 12
+:::
+
+The figures are invented; the rendering, the dark mode, and the static-by-default
+output are real.
