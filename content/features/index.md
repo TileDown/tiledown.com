@@ -54,6 +54,15 @@ The counter tile is local: it emits JavaScript, but it does not need a server.
 label: Press to test JavaScript
 :::
 
+The embed tile is static and provider-constrained. Authors keep a safe URL in
+Markdown; TileDown emits a responsive iframe.
+
+:::tile embed
+url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+title: TileDown embed demo
+aspectRatio: 16/9
+:::
+
 ## Site generation
 
 The site build turns `index.md` files into routes. The top-level folders become
