@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PDF playground (Swift in WebAssembly) - TileDown</title>
+<style>
+  :root { color-scheme: light dark; --bg:#ffffff; --fg:#0f172a; --muted:#64748b; --line:#e2e8f0; --card:#f8fafc; --accent:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0a0a0a; --fg:#e5e7eb; --muted:#94a3b8; --line:#262626; --card:#171717; --accent:#60a5fa; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+  a { color: var(--accent); }
+  h1 { font-size: 1.9rem; margin: 0 0 .25rem; }
+  .sub { color: var(--muted); margin: 0 0 1.75rem; }
+  textarea { width:100%; min-height:11rem; padding:.85rem 1rem; font:.95rem ui-monospace, SFMono-Regular, Menlo, monospace;
+             color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:.7rem; resize:vertical; }
+  .examples { display:flex; flex-wrap:wrap; gap:.5rem; margin:.75rem 0 1.5rem; }
+  .examples button { font:.85rem ui-monospace, monospace; color:var(--fg); background:var(--card);
+                     border:1px solid var(--line); border-radius:.6rem; padding:.35rem .7rem; cursor:pointer; }
+  .examples button:hover { border-color:var(--accent); }
+  #stage { min-height: 26rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.85rem;
+           border:1px solid var(--line); border-radius:.9rem; padding:1rem; background:var(--card); }
+  #preview { width:100%; height:30rem; border:1px solid var(--line); border-radius:.6rem; background:#fff; }
+  .pg-gate { text-align:center; max-width:34rem; }
+  .pg-gate p { color:var(--muted); margin:0 0 1.1rem; line-height:1.55; }
+  .pg-gate button, #download { font:1rem system-ui, sans-serif; color:#fff; background:var(--accent);
+                    border:0; border-radius:.6rem; padding:.6rem 1.2rem; cursor:pointer; text-decoration:none; display:inline-block; }
+  .pg-gate button:hover, #download:hover { filter:brightness(1.08); }
+  .pg-gate button:disabled { opacity:.6; cursor:default; }
+  .pg-error { color:var(--muted); font-size:.95rem; max-width:34rem; text-align:center; line-height:1.55; }
+  .pg-error-svg { width:100%; max-width:17rem; height:auto; color:var(--muted); }
+  .pg-bar { display:flex; align-items:center; gap:1rem; margin-top:1rem; flex-wrap:wrap; }
+  #status { color:var(--muted); font-size:.9rem; margin:0; }
+  .note { color:var(--muted); font-size:.92rem; border-top:1px solid var(--line); margin-top:2.5rem; padding-top:1.25rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>PDF playground</h1>
+  <p class="sub">The TileDown PDF engine (MarkdownPDF), compiled to WebAssembly, running in your browser. Type Markdown; it renders a real PDF. No server.</p>
+
+  <textarea id="md" spellcheck="false"># Hello from WebAssembly
+
+This PDF was rendered **in your browser** by a Swift engine compiled to
+WebAssembly. No server touched it.
+
+## What works
+- Headings, **bold**, *italic*, and [links](https://tiledown.com)
+- Lists, tables, and math
+
+The quadratic formula, $x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$, inline; and a block:
+
+$$
+e^{i\pi} + 1 = 0
+$$
+
+| Engine | Language | Runs in |
+|--------|----------|---------|
+| MarkdownPDF | Swift | the browser |
+
+> Same Markdown the site renders to HTML also renders to a PDF.
+</textarea>
+  <div class="examples" id="examples"></div>
+
+  <div id="stage">
+    <div class="pg-gate">
+      <p>Rendering a PDF live needs a one-time <strong>~18&nbsp;MB</strong> download of the Swift engine,
+         compiled to WebAssembly. Nothing loads until you ask.</p>
+      <button id="load-btn">Load the Swift engine</button>
+    </div>
+  </div>
+  <div class="pg-bar">
+    <a id="download" hidden download="document.pdf">Download PDF</a>
+    <p id="status"></p>
+  </div>
+
+  <p class="note">
+    This page downloads a ~18&nbsp;MB gzipped WebAssembly build of the pure-Swift
+    <a href="https://github.com/mihaelamj/MarkdownPDF">MarkdownPDF</a> engine
+    (+ <a href="https://github.com/mihaelamj/MathTypeset">MathTypeset</a>). The Markdown goes in, a
+    PDF comes out, entirely client-side. Western text uses the built-in base-14 fonts.
+  </p>
+</main>
+
+<script type="module">
+import { WASI, OpenFile, File, PreopenDirectory, ConsoleStdout }
+  from "https://esm.sh/@bjorn3/browser_wasi_shim@0.3.0";
+
+const WASM_GZ = "https://raw.githubusercontent.com/TileDown/tile-down/pdf-playground-asset/docs/playground/markdownpdf.wasm.gz";
+const stage = document.getElementById("stage");
+const status = document.getElementById("status");
+const md = document.getElementById("md");
+const download = document.getElementById("download");
+let blobURL = null;
+
+const EXAMPLES = [
+  ["Readme", "# Project\n\nA **Swift** static site generator.\n\n- fast\n- typed\n- [docs](https://tiledown.com)\n"],
+  ["Table", "# Results\n\n| n | P(match) |\n|---|----------|\n| 23 | 50.7% |\n| 70 | 99.9% |\n"],
+  ["Quote", "# Note\n\n> Markdown in, a real PDF out, in your browser.\n\nNothing server-side.\n"],
+];
+const ex = document.getElementById("examples");
+for (const [label, src] of EXAMPLES) {
+  const btn = document.createElement("button");
+  btn.textContent = label;
+  btn.onclick = () => { md.value = src; render(); };
+  ex.appendChild(btn);
+}
+
+function errorSVG(title) {
+  return '<svg class="pg-error-svg" viewBox="0 0 260 96" role="img" aria-label="' + title + '">'
+    + '<path d="M44 66 L62 32 L80 66 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>'
+    + '<line x1="62" y1="44" x2="62" y2="55" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>'
+    + '<circle cx="62" cy="61" r="1.8" fill="currentColor"/>'
+    + '<text x="100" y="56" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" fill="currentColor">' + title + '</text>'
+    + '</svg>';
+}
+
+let mod = null;
+async function load() {
+  const t0 = performance.now();
+  const gzBuf = await fetch(WASM_GZ).then(r => r.arrayBuffer());
+  const wasmStream = new Blob([gzBuf]).stream().pipeThrough(new DecompressionStream("gzip"));
+  const wasmBytes = new Uint8Array(await new Response(wasmStream).arrayBuffer());
+  mod = await WebAssembly.compile(wasmBytes);
+  status.textContent = `engine loaded in ${((performance.now()-t0)/1000).toFixed(1)}s`;
+  render();
+}
+
+let timer = null;
+async function render() {
+  if (!mod) return;
+  if (!md.value.trim()) {
+    stage.innerHTML = '<span style="color:var(--muted)">Type some Markdown above, or pick an example.</span>';
+    download.hidden = true;
+    return;
+  }
+  const stdin = new OpenFile(new File(new TextEncoder().encode(md.value)));
+  const stdout = ConsoleStdout.lineBuffered(_ => {});
+  const stderr = ConsoleStdout.lineBuffered(_ => {});
+  const work = new PreopenDirectory("/work", new Map());
+  const wasi = new WASI(["mpdf", "/work/out.pdf"], [], [stdin, stdout, stderr, work]);
+  try {
+    const inst = await WebAssembly.instantiate(mod, { wasi_snapshot_preview1: wasi.wasiImport });
+    wasi.start(inst);
+  } catch (e) {
+    stage.innerHTML = errorSVG("Engine error")
+      + '<p class="pg-error">The engine hit an unexpected error rendering that. Try simpler Markdown.</p>';
+    download.hidden = true;
+    return;
+  }
+  const entry = work.dir.contents.get("out.pdf");
+  const bytes = entry && (entry.data || (entry.file && entry.file.data));
+  if (!bytes || bytes.length < 5) {
+    stage.innerHTML = errorSVG("No PDF produced")
+      + '<p class="pg-error">The engine did not write a PDF for that input. Try an example.</p>';
+    download.hidden = true;
+    return;
+  }
+  if (blobURL) URL.revokeObjectURL(blobURL);
+  blobURL = URL.createObjectURL(new Blob([bytes], { type: "application/pdf" }));
+  stage.innerHTML = '<iframe id="preview" title="Rendered PDF" src="' + blobURL + '"></iframe>';
+  download.href = blobURL;
+  download.hidden = false;
+}
+
+md.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(render, 500); });
+document.getElementById("load-btn").addEventListener("click", () => {
+  const btn = document.getElementById("load-btn");
+  btn.disabled = true;
+  btn.textContent = "downloading + compiling...";
+  load().catch(e => { stage.innerHTML = `<span class="pg-error">Could not load the engine: ${e}. Check your connection and reload.</span>`; });
+});
+</script>
+</body>
+</html>
