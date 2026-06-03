@@ -7,9 +7,15 @@ latest: true
 ---
 # TileDown
 
-A Swift static site generator with a Markdown-canonical source format and a typed
-tile model. Authors keep content in constrained Markdown; TileKit turns it into
-static HTML, CSS, browser JavaScript for local tiles, JSON, and feeds.
+A Swift static site generator that renders math, charts, and diagrams to **static
+SVG at build time**. No client-side JavaScript, no web fonts, no MathJax. Write
+ordinary Markdown; get a fast, self-contained page.
+
+$$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
+
+That equation is static SVG: view source and there is no script tag and no font
+request for it. TileKit turns constrained Markdown into static HTML, CSS, JSON, and
+feeds, with browser JavaScript only for interactive tiles.
 
 Source code: [github.com/TileDown/tile-down](link:repo).
 
