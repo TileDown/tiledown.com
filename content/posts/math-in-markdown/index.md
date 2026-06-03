@@ -48,6 +48,13 @@ $$\int_0^\infty e^{-x^2} = \frac{\sqrt{\pi}}{2}$$
 
 $$\lim_{n \to \infty} \left(1 + \frac{1}{n}\right)^n = e$$
 
+## A bigger one
+
+Nothing about the block is special-cased for size. A full matrix equation simply
+lays out wider and taller, grown delimiters and all, from the same `$$` source:
+
+$$\begin{pmatrix} a & b & c \\ d & e & f \\ g & h & i \end{pmatrix} \begin{pmatrix} x \\ y \\ z \end{pmatrix} = \begin{pmatrix} u \\ v \\ w \end{pmatrix}$$
+
 ## Matrices
 
 Environments like `pmatrix` lay out rows and columns with grown delimiters:
