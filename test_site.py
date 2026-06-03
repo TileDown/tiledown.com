@@ -181,6 +181,10 @@ def main():
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
         page = browser.new_page(viewport={"width": 1280, "height": 900})
+        page.route(
+            "https://www.youtube-nocookie.com/**",
+            lambda route: route.fulfill(status=204, body=""),
+        )
         page.emulate_media(color_scheme="light")
 
         page.goto(f"{BASE_URL}/", wait_until="networkidle")
@@ -276,6 +280,18 @@ def main():
         require(center_pixel[3] == 0, f"TileDown mark center is not transparent: {center_pixel}")
         checks += 1
         pass_check("feature page renders callout and transparent mark")
+
+        embed = page.locator(".td-embed iframe").first
+        expect(embed).to_be_visible()
+        require(
+            embed.get_attribute("src") == "https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ",
+            "Feature page embed did not normalize to youtube-nocookie",
+        )
+        embed_box = element_box(page, ".td-embed-frame")
+        ratio = embed_box["width"] / embed_box["height"]
+        require(abs(ratio - (16 / 9)) < 0.05, f"Feature page embed ratio is {ratio:.2f}")
+        checks += 1
+        pass_check("feature page renders safe responsive embed")
 
         themed_routes = [
             ("/features/", "Feature Tour", "/assets/feature-tour-dark.svg"),
