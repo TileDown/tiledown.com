@@ -24,6 +24,9 @@
   #stage { min-height: 9rem; display:flex; align-items:center; justify-content:center;
            border:1px solid var(--line); border-radius:.9rem; padding:1.5rem; background:var(--card); overflow-x:auto; }
   #status { color:var(--muted); font-size:.9rem; margin-top:1rem; }
+  .pg-hint { color:var(--muted); }
+  .pg-error { color:var(--muted); font-size:.95rem; max-width:32rem; text-align:center; line-height:1.55; }
+  .pg-error code { background:var(--bg); border:1px solid var(--line); border-radius:.4rem; padding:.05rem .35rem; }
   /* The renderer ships a hidden MathML companion for accessibility; keep it hidden. */
   .td-math-a11y { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); }
   .td-math-display svg { max-width:100%; }
@@ -93,6 +96,10 @@ async function load() {
 
 async function render() {
   if (!mod) return;
+  if (!tex.value.trim()) {
+    stage.innerHTML = '<span class="pg-hint">Type a formula above, or pick an example.</span>';
+    return;
+  }
   let out = "";
   const stdin = new OpenFile(new File(new TextEncoder().encode(tex.value)));
   const stdout = ConsoleStdout.lineBuffered(line => { out += line + "\n"; });
@@ -102,8 +109,17 @@ async function render() {
   try {
     const inst = await WebAssembly.instantiate(mod, { wasi_snapshot_preview1: wasi.wasiImport });
     wasi.start(inst);
-  } catch (e) { out = `<span style="color:#ef4444">${e}</span>`; }
-  stage.innerHTML = out || '<span style="color:var(--muted)">(nothing to render)</span>';
+  } catch (e) {
+    stage.innerHTML = '<span class="pg-error">The engine hit an unexpected error rendering that. Try a different formula.</span>';
+    return;
+  }
+  if (!out.trim() || out.includes("td-math-error")) {
+    stage.innerHTML = '<span class="pg-error">That did not parse. TileDown renders a TeX <em>subset</em>, '
+      + 'so an unsupported command or a missing brace lands here. Try an example, or simplify the input '
+      + '(for instance <code>\\text{}</code> and <code>\\det</code> are not supported yet).</span>';
+    return;
+  }
+  stage.innerHTML = out;
 }
 
 let timer = null;
