@@ -21,9 +21,21 @@
   .examples button { font:.85rem ui-monospace, monospace; color:var(--fg); background:var(--card);
                      border:1px solid var(--line); border-radius:.6rem; padding:.35rem .7rem; cursor:pointer; }
   .examples button:hover { border-color:var(--accent); }
-  #stage { min-height: 9rem; display:flex; align-items:center; justify-content:center;
+  #stage { min-height: 9rem; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.85rem;
            border:1px solid var(--line); border-radius:.9rem; padding:1.5rem; background:var(--card); overflow-x:auto; }
-  #status { color:var(--muted); font-size:.9rem; margin-top:1rem; }
+  .pg-error-svg { width:100%; max-width:17rem; height:auto; color:var(--muted); }
+  .pg-bar { display:flex; align-items:center; gap:1rem; margin-top:1rem; }
+  #print { font:.85rem system-ui, sans-serif; color:var(--fg); background:var(--card); border:1px solid var(--line);
+           border-radius:.6rem; padding:.4rem .85rem; cursor:pointer; }
+  #print:hover { border-color:var(--accent); color:var(--accent); }
+  #print[hidden] { display:none; }
+  #status { color:var(--muted); font-size:.9rem; margin:0; }
+  @media print {
+    body { background:#fff; color:#000; }
+    main > :not(#stage), .pg-bar, .examples, textarea, h1, .sub, .note { display:none !important; }
+    #stage { border:0; background:#fff; color:#000; min-height:0; padding:0; }
+    .pg-error { color:#000; }
+  }
   .pg-hint { color:var(--muted); }
   .pg-gate { text-align:center; max-width:34rem; }
   .pg-gate p { color:var(--muted); margin:0 0 1.1rem; line-height:1.55; }
@@ -55,7 +67,10 @@
       <button id="load-btn">Load the Swift engine</button>
     </div>
   </div>
-  <p id="status"></p>
+  <div class="pg-bar">
+    <button id="print" type="button" hidden>Print / Save as PDF</button>
+    <p id="status"></p>
+  </div>
 
   <p class="note">
     This page downloads a ~18&nbsp;MB gzipped WebAssembly build of the pure-Swift engine
@@ -103,7 +118,23 @@ async function load() {
   const wasmBytes = new Uint8Array(await new Response(wasmStream).arrayBuffer());
   mod = await WebAssembly.compile(wasmBytes);
   status.textContent = `engine loaded in ${((performance.now()-t0)/1000).toFixed(1)}s`;
+  document.getElementById("print").hidden = false;
   render();
+}
+
+// Print just the rendered formula. The print stylesheet hides the page chrome,
+// so the browser's "Save as PDF" yields a clean one-formula page.
+document.getElementById("print").addEventListener("click", () => window.print());
+
+// A self-contained error graphic, so the stage always shows an SVG (a formula
+// or, on failure, this). currentColor keeps it on-theme in light and dark.
+function errorSVG(title) {
+  return '<svg class="pg-error-svg" viewBox="0 0 260 96" role="img" aria-label="' + title + '">'
+    + '<path d="M44 66 L62 32 L80 66 Z" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round"/>'
+    + '<line x1="62" y1="44" x2="62" y2="55" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>'
+    + '<circle cx="62" cy="61" r="1.8" fill="currentColor"/>'
+    + '<text x="100" y="56" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" fill="currentColor">' + title + '</text>'
+    + '</svg>';
 }
 
 async function render() {
@@ -122,13 +153,15 @@ async function render() {
     const inst = await WebAssembly.instantiate(mod, { wasi_snapshot_preview1: wasi.wasiImport });
     wasi.start(inst);
   } catch (e) {
-    stage.innerHTML = '<span class="pg-error">The engine hit an unexpected error rendering that. Try a different formula.</span>';
+    stage.innerHTML = errorSVG("Engine error")
+      + '<p class="pg-error">The engine hit an unexpected error rendering that. Try a different formula.</p>';
     return;
   }
   if (!out.trim() || out.includes("td-math-error")) {
-    stage.innerHTML = '<span class="pg-error">That did not parse. TileDown renders a TeX <em>subset</em>, '
-      + 'so an unsupported command or a missing brace lands here. Try an example, or simplify the input '
-      + '(for instance <code>\\text{}</code> and <code>\\det</code> are not supported yet).</span>';
+    stage.innerHTML = errorSVG("Couldn’t render that")
+      + '<p class="pg-error">TileDown renders a TeX <em>subset</em>, so an unsupported command or a missing '
+      + 'brace lands here. Try an example, or simplify the input (for instance <code>\\text{}</code> and '
+      + '<code>\\det</code> are not supported yet).</p>';
     return;
   }
   stage.innerHTML = out;
