@@ -7,7 +7,7 @@ rssPath: feed.xml
 rssTitle: TileDown
 rssDescription: Development notes for the TileDown static site generator.
 latestPosts: 3
-postsLabel: Capabilities
+postsLabel: Fresh
 shareLinks: true
 analytics.head: <style>.td-main>.td-theme-image[aria-label="TileDown"]+h1{margin-inline:auto;text-align:center;}</style>
 social.github: https://github.com/TileDown/tile-down
