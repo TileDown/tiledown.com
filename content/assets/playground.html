@@ -25,6 +25,12 @@
            border:1px solid var(--line); border-radius:.9rem; padding:1.5rem; background:var(--card); overflow-x:auto; }
   #status { color:var(--muted); font-size:.9rem; margin-top:1rem; }
   .pg-hint { color:var(--muted); }
+  .pg-gate { text-align:center; max-width:34rem; }
+  .pg-gate p { color:var(--muted); margin:0 0 1.1rem; line-height:1.55; }
+  .pg-gate button { font:1rem system-ui, sans-serif; color:#fff; background:var(--accent);
+                    border:0; border-radius:.6rem; padding:.6rem 1.2rem; cursor:pointer; }
+  .pg-gate button:hover { filter:brightness(1.08); }
+  .pg-gate button:disabled { opacity:.6; cursor:default; }
   .pg-error { color:var(--muted); font-size:.95rem; max-width:32rem; text-align:center; line-height:1.55; }
   .pg-error code { background:var(--bg); border:1px solid var(--line); border-radius:.4rem; padding:.05rem .35rem; }
   /* The renderer ships a hidden MathML companion for accessibility; keep it hidden. */
@@ -42,7 +48,13 @@
   <textarea id="tex" spellcheck="false">\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}</textarea>
   <div class="examples" id="examples"></div>
 
-  <div id="stage"><span style="color:var(--muted)">loading the Swift engine...</span></div>
+  <div id="stage">
+    <div class="pg-gate">
+      <p>Running math live needs a one-time <strong>~18&nbsp;MB</strong> download of the Swift engine,
+         compiled to WebAssembly. Nothing loads until you ask.</p>
+      <button id="load-btn">Load the Swift engine</button>
+    </div>
+  </div>
   <p id="status"></p>
 
   <p class="note">
@@ -124,7 +136,15 @@ async function render() {
 
 let timer = null;
 tex.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(render, 350); });
-load().catch(e => { stage.innerHTML = `<span style="color:#ef4444">Failed to load: ${e}</span>`; });
+
+// The engine never downloads on its own: a visit costs nothing until the
+// reader opts in here. Shared links land on this gate, not a 18 MB fetch.
+document.getElementById("load-btn").addEventListener("click", () => {
+  const btn = document.getElementById("load-btn");
+  btn.disabled = true;
+  btn.textContent = "downloading + compiling...";
+  load().catch(e => { stage.innerHTML = `<span class="pg-error">Could not load the engine: ${e}. Check your connection and reload.</span>`; });
+});
 </script>
 </body>
 </html>
