@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Math playground (Swift in WebAssembly) - TileDown</title>
+<style>
+  :root { color-scheme: light dark; --bg:#ffffff; --fg:#0f172a; --muted:#64748b; --line:#e2e8f0; --card:#f8fafc; --accent:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#0a0a0a; --fg:#e5e7eb; --muted:#94a3b8; --line:#262626; --card:#171717; --accent:#60a5fa; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 820px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
+  a { color: var(--accent); }
+  h1 { font-size: 1.9rem; margin: 0 0 .25rem; }
+  .sub { color: var(--muted); margin: 0 0 1.75rem; }
+  textarea { width:100%; min-height:5.5rem; padding:.85rem 1rem; font:1rem ui-monospace, SFMono-Regular, Menlo, monospace;
+             color:var(--fg); background:var(--card); border:1px solid var(--line); border-radius:.7rem; resize:vertical; }
+  .examples { display:flex; flex-wrap:wrap; gap:.5rem; margin:.75rem 0 1.5rem; }
+  .examples button { font:.85rem ui-monospace, monospace; color:var(--fg); background:var(--card);
+                     border:1px solid var(--line); border-radius:.6rem; padding:.35rem .7rem; cursor:pointer; }
+  .examples button:hover { border-color:var(--accent); }
+  #stage { min-height: 9rem; display:flex; align-items:center; justify-content:center;
+           border:1px solid var(--line); border-radius:.9rem; padding:1.5rem; background:var(--card); overflow-x:auto; }
+  #status { color:var(--muted); font-size:.9rem; margin-top:1rem; }
+  /* The renderer ships a hidden MathML companion for accessibility; keep it hidden. */
+  .td-math-a11y { position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); clip-path:inset(50%); }
+  .td-math-display svg { max-width:100%; }
+  .td-math { font-size: 2.2rem; }
+  .note { color:var(--muted); font-size:.92rem; border-top:1px solid var(--line); margin-top:2.5rem; padding-top:1.25rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Math playground</h1>
+  <p class="sub">The TileDown math engine, compiled to WebAssembly, running in your browser. Type TeX; it renders to SVG. No server.</p>
+
+  <textarea id="tex" spellcheck="false">\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}</textarea>
+  <div class="examples" id="examples"></div>
+
+  <div id="stage"><span style="color:var(--muted)">loading the Swift engine...</span></div>
+  <p id="status"></p>
+
+  <p class="note">
+    This page downloads a ~18&nbsp;MB gzipped WebAssembly build of the pure-Swift engine
+    (<a href="https://github.com/mihaelamj/MathTypeset">MathTypeset</a> +
+    <a href="https://github.com/TileDown/tile-down">TileDown</a>). That weight is exactly why the
+    rest of this site renders math to static SVG <em>at build time</em>: readers never download the engine.
+    Here, you opted in to run it live.
+  </p>
+</main>
+
+<script type="module">
+import { WASI, OpenFile, File, PreopenDirectory, ConsoleStdout }
+  from "https://esm.sh/@bjorn3/browser_wasi_shim@0.3.0";
+
+const WASM_GZ = "https://raw.githubusercontent.com/TileDown/tile-down/wasm-playground-asset/docs/playground/tiledown-math.wasm.gz";
+const FONT = "latinmodern-math.otf";
+const stage = document.getElementById("stage");
+const status = document.getElementById("status");
+const tex = document.getElementById("tex");
+
+const EXAMPLES = [
+  ["Quadratic", "\\frac{-b \\pm \\sqrt{b^2 - 4ac}}{2a}"],
+  ["Euler", "e^{i\\pi} + 1 = 0"],
+  ["Sum", "\\sum_{i=1}^{n} i = \\frac{n(n+1)}{2}"],
+  ["Gaussian", "\\int_0^\\infty e^{-x^2} = \\frac{\\sqrt{\\pi}}{2}"],
+  ["Matrix", "\\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}"],
+];
+const ex = document.getElementById("examples");
+for (const [label, src] of EXAMPLES) {
+  const btn = document.createElement("button");
+  btn.textContent = label;
+  btn.onclick = () => { tex.value = src; render(); };
+  ex.appendChild(btn);
+}
+
+let mod = null, fontBytes = null;
+async function load() {
+  const t0 = performance.now();
+  const [gzBuf, fontBuf] = await Promise.all([
+    fetch(WASM_GZ).then(r => r.arrayBuffer()),
+    fetch(FONT).then(r => r.arrayBuffer()),
+  ]);
+  fontBytes = new Uint8Array(fontBuf);
+  const wasmStream = new Blob([gzBuf]).stream().pipeThrough(new DecompressionStream("gzip"));
+  const wasmBytes = new Uint8Array(await new Response(wasmStream).arrayBuffer());
+  mod = await WebAssembly.compile(wasmBytes);
+  status.textContent = `engine loaded in ${((performance.now()-t0)/1000).toFixed(1)}s`;
+  render();
+}
+
+async function render() {
+  if (!mod) return;
+  let out = "";
+  const stdin = new OpenFile(new File(new TextEncoder().encode(tex.value)));
+  const stdout = ConsoleStdout.lineBuffered(line => { out += line + "\n"; });
+  const stderr = ConsoleStdout.lineBuffered(_ => {});
+  const fonts = new PreopenDirectory("/fonts", new Map([["latinmodern-math.otf", new File(fontBytes)]]));
+  const wasi = new WASI(["mp", "/fonts/latinmodern-math.otf"], [], [stdin, stdout, stderr, fonts]);
+  try {
+    const inst = await WebAssembly.instantiate(mod, { wasi_snapshot_preview1: wasi.wasiImport });
+    wasi.start(inst);
+  } catch (e) { out = `<span style="color:#ef4444">${e}</span>`; }
+  stage.innerHTML = out || '<span style="color:var(--muted)">(nothing to render)</span>';
+}
+
+let timer = null;
+tex.addEventListener("input", () => { clearTimeout(timer); timer = setTimeout(render, 350); });
+load().catch(e => { stage.innerHTML = `<span style="color:#ef4444">Failed to load: ${e}</span>`; });
+</script>
+</body>
+</html>
