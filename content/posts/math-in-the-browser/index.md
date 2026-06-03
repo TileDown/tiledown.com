@@ -23,6 +23,10 @@ can also run in your browser.
 Type a TeX formula and it renders to SVG, live, with no server doing the work. It
 is the same code path as the build, running in a WebAssembly sandbox in your tab.
 
+There is a companion [**PDF playground**](/assets/pdf-playground.html) too: the
+MarkdownPDF engine compiled to WebAssembly, turning Markdown into a real PDF
+entirely in your browser. Same idea, a different Swift engine.
+
 ## Why this is a footnote, not the feature
 
 The playground downloads about 18 MB of gzipped WebAssembly: the Swift runtime,
