@@ -99,6 +99,15 @@ def assert_theme_image_pair(page, selector, expected_dark_src):
     )
 
 
+def assert_playground_asset(page, path, expected_asset, expected_runtime_text):
+    response = page.request.get(f"{BASE_URL}{path}")
+    require(response.status == 200, f"{path} returned {response.status}")
+    body = response.text()
+    require(expected_asset in body, f"{path} missing expected WASM asset URL")
+    require("WebAssembly.compile" in body, f"{path} missing WebAssembly compile path")
+    require(expected_runtime_text in body, f"{path} missing expected runtime text")
+
+
 def visible_image_box(page, selector):
     return page.eval_on_selector(
         selector,
@@ -327,6 +336,28 @@ def main():
         checks += 1
         pass_check("default article demo renders")
 
+        page.goto(f"{BASE_URL}/posts/tiledown-0-4-1-static-code-color/", wait_until="networkidle")
+        expect(page.locator("h1").first).to_have_text("TileDown 0.4.1 ships static code color")
+        syntax = page.eval_on_selector(
+            "code.language-swift",
+            """(code) => {
+                const keyword = code.querySelector(".tok-keyword");
+                const string = code.querySelector(".tok-string");
+                return {
+                    tokenCount: code.querySelectorAll("[class^='tok-']").length,
+                    keywordColor: keyword ? getComputedStyle(keyword).color : "",
+                    stringColor: string ? getComputedStyle(string).color : "",
+                    plainColor: getComputedStyle(code).color
+                };
+            }""",
+        )
+        require(syntax["tokenCount"] >= 6, f"Syntax highlighting emitted too few tokens: {syntax}")
+        require(syntax["keywordColor"] and syntax["keywordColor"] != syntax["plainColor"], f"Keyword color did not apply: {syntax}")
+        require(syntax["stringColor"] and syntax["stringColor"] != syntax["plainColor"], f"String color did not apply: {syntax}")
+        require(page.locator("code.language-json .tok-property").count() >= 1, "JSON code block has no property tokens")
+        checks += 1
+        pass_check("static source highlighting renders colored tokens")
+
         page.goto(f"{BASE_URL}/posts/interactive-tiles/", wait_until="networkidle")
         demo_counter = page.locator("[data-td-counter]").first
         demo_value = demo_counter.locator("[data-td-counter-value]")
@@ -371,6 +402,14 @@ def main():
         markdown_text = page.locator("body").inner_text()
         require("Markdown as Canonical Source" in markdown_text, "Markdown tag missing Markdown post")
         require("Slug Overrides and References" in markdown_text, "Markdown tag missing routing post")
+        clear = page.locator(".td-tagbar .td-tag-clear").first
+        require(clear.get_attribute("href") == "/tags/", "Tag clear link does not return to all tags")
+        click_center(page, clear)
+        page.wait_for_url("**/tags/")
+        all_tags_text = page.locator("body").inner_text()
+        require("TileDown 0.4.1 ships static code color" in all_tags_text, "Cleared tag page is missing latest post")
+        require("Markdown as Canonical Source" in all_tags_text, "Cleared tag page is missing older post")
+        page.goto(f"{BASE_URL}/tags/markdown/", wait_until="networkidle")
         click_center(page, page.locator(".td-tagbar").get_by_role("link", name="Swift").first)
         page.wait_for_url("**/tags/markdown/swift/")
         markdown_swift_text = page.locator("body").inner_text()
@@ -397,9 +436,25 @@ def main():
         require("<rss" in feed_body, "Feed is not RSS")
         require("<title>TileDown</title>" in feed_body, "Feed title is not TileDown")
         require("TileDown Blog" not in feed_body, "Feed title still says Blog")
+        require("TileDown 0.4.1 ships static code color" in feed_body, "Feed is missing the latest post")
         require("Browser-Visible Tiles" in feed_body, "Feed is missing a post")
         checks += 1
         pass_check("rss feed renders")
+
+        assert_playground_asset(
+            page,
+            "/assets/playground.html",
+            "wasm-playground-asset/docs/playground/tiledown-math.wasm.gz",
+            "Math playground",
+        )
+        assert_playground_asset(
+            page,
+            "/assets/pdf-playground.html",
+            "pdf-playground-asset/docs/playground/markdownpdf.wasm.gz",
+            "application/pdf",
+        )
+        checks += 1
+        pass_check("webassembly playground assets remain wired")
 
         shim = page.request.get(f"{BASE_URL}/out/repo/")
         require(shim.status == 200, f"Redirect shim returned {shim.status}")

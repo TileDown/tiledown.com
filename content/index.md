@@ -7,9 +7,9 @@ latest: true
 ---
 # TileDown
 
-A Swift static site generator that renders math, charts, and diagrams to **static
-SVG at build time**. No client-side JavaScript, no web fonts, no MathJax. Write
-ordinary Markdown; get a fast, self-contained page.
+A Swift static site generator that renders math, charts, and source-code color at
+**build time**. No client-side JavaScript for those surfaces, no web fonts, no
+MathJax. Write ordinary Markdown; get a fast, self-contained page.
 
 $$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
 
@@ -42,9 +42,10 @@ label: Count a local tile
 | Surface | Live coverage |
 |:---|:---|
 | Markdown profile | headings, links, images, tables, lists, code, block quotes |
+| Source code | build-time syntax highlighting for 19 language profiles |
 | Typed tiles | `callout` and `counter` render in this site |
 | Site model | folder routing, navigation, shared stylesheet, assets |
-| Writing flow | canonical formatting and JSON output are documented |
+| Writing flow | canonical formatting, JSON output, help, and doctor checks |
 | Publishing flow | Pages artifact workflow builds from source on Linux |
 | Content model | posts, tags, latest posts, RSS, drafts, slug overrides |
 | References | `page:`, `post:`, `tag:`, `social:`, and `link:` references |
@@ -58,5 +59,5 @@ open the [repository](link:repo) to inspect the implementation.
 
 TileDown is a developer preview, not a production static site generator yet. The
 current engine and CLI are real enough to build this site, but project
-scaffolding, watch mode, richer tile types, and the service binding config path
-are still on the road map.
+scaffolding, watch mode, richer tile types, and production service hosting are
+still on the road map.

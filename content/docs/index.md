@@ -15,8 +15,8 @@ TileDown is a Swift package under `Packages/`. The engine is `TileKit`; the CLI 
 From the repo root:
 
 ```sh
-scripts/build-website.sh
-scripts/check-website.sh
+scripts/build.sh
+scripts/check.sh
 ```
 
 The first command writes the generated site to `.build/website`. The second
@@ -26,12 +26,14 @@ generated pages.
 ## CLI surface
 
 ```sh
-cd Packages
-swift run tiledown version
-swift run tiledown build source.md template.html out.html
-swift run tiledown build-site ../Website/content ../.build/website
-swift run tiledown json ../Website/content/index.md ../.build/home.json
-swift run tiledown fmt --check ../Website/content/index.md
+tiledown help
+tiledown version
+tiledown build source.md template.html out.html
+tiledown build-site content/ dist/
+tiledown serve --port 8765 content/
+tiledown doctor --publish content/
+tiledown json content/index.md .build/home.json
+tiledown fmt --check content/index.md
 ```
 
 ## Current status
@@ -42,8 +44,10 @@ swift run tiledown fmt --check ../Website/content/index.md
 | Built-in layouts | top navigation and left sidebar |
 | Themes | standard and system themes with light/dark support |
 | Posts | dated posts, latest posts, RSS, tags, draft exclusion |
+| Source code | build-time syntax highlighting, including Markdown source disclosure |
 | Tiles | callout, counter, and service-form internals |
-| Service forms | tested in the engine, waiting on CLI config loading |
+| CLI diagnostics | help, serve, and doctor checks for content directories |
+| Service forms | local service contracts are implemented; deployed proxy hosting is future work |
 | Live publishing | GitHub Pages workflow builds this site from source |
 | Platforms | macOS and Linux build and test gates |
 

@@ -18,13 +18,20 @@ Raw HTML is escaped by design, so source stays portable and editor-friendly.
 > The Markdown file remains the canonical source. The engine derives rendered
 > HTML, shared CSS, browser JavaScript, JSON, and feeds from that source.
 
-Inline code like `swift run tiledown fmt --check source.md` uses the same theme as
-code blocks:
+Inline code like `tiledown fmt --check source.md` uses the same theme as code
+blocks. Fenced source blocks are highlighted at build time, so the page ships
+colored spans and CSS instead of a browser highlighter:
 
 ```sh
-cd Packages
-swift run tiledown build-site ../Website/content ../.build/website
-swift run tiledown json ../Website/content/index.md ../.build/home.json
+tiledown build-site content/ dist/
+tiledown json content/index.md .build/home.json
+```
+
+```swift
+struct TileDownFeature {
+    let name = "static syntax highlighting"
+    let shipsJavaScript = false
+}
 ```
 
 ## Tables, links, and images
@@ -34,6 +41,7 @@ swift run tiledown json ../Website/content/index.md ../.build/home.json
 | Pages | [](page:docs) resolves from a `page:` reference |
 | Posts | [](post:browser-visible-tiles) resolves from a `post:` reference |
 | Tags | [](tag:Tiles) resolves from a `tag:` reference |
+| Source code | Swift and shell fences render with build-time token colors |
 | Socials | [GitHub](social:github) resolves from `tiledown.yml` |
 | Redirects | [Design notes](link:design) goes through `/out/design/` |
 
@@ -83,5 +91,5 @@ rules as the site theme. The homepage image on this site uses that path.
 
 Generated tag pages are static URLs. Start with the [Markdown tag](/tags/markdown/)
 and select Swift to narrow the listing to [Markdown AND Swift](/tags/markdown/swift/).
-Selected tags stay visible in the tag bar, and clicking one removes it from the
-current filter.
+Selected tags stay visible in the tag bar, clicking one removes it from the
+current filter, and Clear returns to the all-articles tag page.
