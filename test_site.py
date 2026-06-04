@@ -71,6 +71,19 @@ def assert_article_share_links(page, expected_path):
     require(can_receive_center_click(page.locator(".td-article-share a").first), "Share link center is covered")
 
 
+def assert_article_pdf(page, slug, expected_href):
+    link = page.locator(".td-article-actions a[download]").first
+    href = link.get_attribute("href") if link.count() else None
+    require(href == expected_href, f"Unexpected article PDF link: {href}")
+
+    response = page.request.get(f"{BASE_URL}/{slug}.pdf")
+    require(response.status == 200, f"{slug}.pdf returned {response.status}")
+    require(bytes(response.body())[:5] == b"%PDF-", f"{slug}.pdf is not a PDF")
+
+    nested = page.request.get(f"{BASE_URL}/posts/{slug}/index.pdf")
+    require(nested.status == 404, f"Nested article PDF unexpectedly exists: {nested.status}")
+
+
 def assert_theme_image_pair(page, selector, expected_dark_src):
     light = page.locator(f"{selector} .td-theme-image-light").first
     dark = page.locator(f"{selector} .td-theme-image-dark").first
@@ -356,8 +369,13 @@ def main():
         require(syntax["keywordColor"] and syntax["keywordColor"] != syntax["plainColor"], f"Keyword color did not apply: {syntax}")
         require(syntax["stringColor"] and syntax["stringColor"] != syntax["plainColor"], f"String color did not apply: {syntax}")
         require(page.locator("code.language-json .tok-property").count() >= 1, "JSON code block has no property tokens")
+        assert_article_pdf(
+            page,
+            "tiledown-0-4-1-static-code-color",
+            "/tiledown-0-4-1-static-code-color.pdf",
+        )
         checks += 1
-        pass_check("static source highlighting renders colored tokens")
+        pass_check("static source highlighting renders colored tokens and PDF")
 
         page.goto(f"{BASE_URL}/posts/interactive-tiles/", wait_until="networkidle")
         demo_counter = page.locator("[data-td-counter]").first

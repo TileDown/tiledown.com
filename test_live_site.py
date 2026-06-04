@@ -36,6 +36,20 @@ def assert_loaded_image(locator, label):
     )
 
 
+def assert_article_pdf(page, slug):
+    link = page.locator(".td-article-actions a[download]").first
+    href = link.get_attribute("href") if link.count() else None
+    expected = f"{BASE_URL}/{slug}.pdf"
+    require(href == expected, f"Unexpected live article PDF link: {href}")
+
+    response = page.request.get(expected)
+    require(response.status == 200, f"{slug}.pdf returned {response.status}")
+    require(bytes(response.body())[:5] == b"%PDF-", f"{slug}.pdf is not a PDF")
+
+    nested = page.request.get(f"{BASE_URL}/posts/{slug}/index.pdf")
+    require(nested.status == 404, f"Nested article PDF unexpectedly exists: {nested.status}")
+
+
 def main():
     checks = 0
     blocked_wasm = []
@@ -76,8 +90,9 @@ def main():
         assert_loaded_image(page.locator('img[src*="/assets/post-code-dark.svg"]').first, "code post hero")
         require(page.locator("code.language-swift .tok-keyword").count() >= 1, "Live Swift code has no keyword tokens")
         require(page.locator("code.language-json .tok-property").count() >= 1, "Live JSON code has no property tokens")
+        assert_article_pdf(page, "tiledown-0-4-1-static-code-color")
         checks += 1
-        pass_check("live article shows image and highlighted code")
+        pass_check("live article shows image, highlighted code, and PDF")
 
         page.goto(f"{BASE_URL}/tags/", wait_until="networkidle")
         tags_text = page.locator("body").inner_text()
