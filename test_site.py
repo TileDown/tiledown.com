@@ -308,6 +308,7 @@ def main():
             ("/posts/default-article-style/", "Default Article Style", "/assets/post-article-dark.svg"),
             ("/posts/interactive-tiles/", "Interactive Tiles", "/assets/post-interactive-dark.svg"),
             ("/posts/tag-intersections/", "Tag Intersections", "/assets/post-tags-dark.svg"),
+            ("/posts/tiledown-0-4-1-static-code-color/", "TileDown 0.4.1 ships static code color", "/assets/post-code-dark.svg"),
             ("/posts/publishing-pipeline/", "Publishing Pipeline", "/assets/post-publishing-dark.svg"),
             ("/posts/browser-visible-tiles/", "Browser-Visible Tiles", "/assets/post-tiles-dark.svg"),
             ("/posts/linux-first-builds/", "Linux-First Builds", "/assets/post-linux-dark.svg"),

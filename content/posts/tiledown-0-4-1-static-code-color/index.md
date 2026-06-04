@@ -3,6 +3,8 @@ title: TileDown 0.4.1 ships static code color
 date: 2026-06-05
 description: TileDown 0.4.1 adds build-time syntax highlighting, safer tag clearing, and broader example-site checks without adding a client-side highlighter.
 tags: Release, Syntax, Source, Tags, Testing
+image: /assets/post-code.svg
+imageDark: /assets/post-code-dark.svg
 ---
 # TileDown 0.4.1 ships static code color
 
