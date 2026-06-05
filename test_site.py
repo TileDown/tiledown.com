@@ -236,11 +236,11 @@ def main():
         page.goto(f"{BASE_URL}/", wait_until="networkidle")
         expect(page).to_have_title("TileDown")
         expect(page.locator(".td-brand-title")).to_have_text("TileDown")
-        expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
+        expect(page.locator(".td-brand-subtitle")).to_have_text("v0.5.0")
         assert_umami_analytics(page, "/")
         assert_favicon(page, FAVICON_PATH)
         checks += 1
-        pass_check("home title, version, analytics, and favicon", "TileDown v0.4.1")
+        pass_check("home title, version, analytics, and favicon", "TileDown v0.5.0")
 
         home_title = page.locator("h1").first
         title_alignment = home_title.evaluate(
