@@ -18,6 +18,16 @@ It is not a framework dependency and it does not require build-time JavaScript.
 label: Count this tile
 :::
 
+Not every tile ships JavaScript. The embed tile is `static`: you keep a safe
+provider URL in Markdown and the generator emits a responsive, sandboxed iframe
+with no script of its own. Here is one, selected with the utmost rigor:
+
+:::tile embed
+url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
+title: A rigorously chosen reference video
+aspectRatio: 16/9
+:::
+
 ## Why the boundary matters
 
 - The engine and CLI stay Swift.

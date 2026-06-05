@@ -29,6 +29,16 @@ MathML copy travels with each formula for screen readers and copy-paste.
 Because the engine is shared with MarkdownPDF, the same source typesets to the
 same shapes whether you target a web page or a PDF.
 
+## Why not the usual `latex + dvisvgm` pipeline?
+
+Other build-time math-to-SVG tools shell out to a full TeX distribution plus
+`dvisvgm`, `pdfcrop`, and an SVG optimizer. That produces similar output, but it
+means every build host needs a multi-gigabyte LaTeX install and several external
+binaries. TileDown carries none of that. It parses the font itself — a CFF
+charstring interpreter written in Swift — and lays out the math with its own
+box-and-glue engine, so the only dependency is Swift. The build stays clean on
+macOS and Linux with no C libraries and no toolchain to provision.
+
 ## Fractions, roots, and scripts
 
 The quadratic formula nests a fraction over a radical whose sign scales to its

@@ -1,6 +1,6 @@
 ---
 title: TileDown
-description: A Swift static site generator with Markdown-canonical source and typed tiles.
+description: A Swift static site generator that typesets TeX math to static SVG at build time — pure Swift, no LaTeX toolchain, one engine shared with a PDF generator.
 image: /assets/site-preview-light.svg
 imageDark: /assets/site-preview-dark.svg
 latest: true
@@ -8,8 +8,10 @@ latest: true
 # TileDown
 
 A Swift static site generator that renders math, charts, and source-code color at
-**build time**. No client-side JavaScript for those surfaces, no web fonts, no
-MathJax. Write ordinary Markdown; get a fast, self-contained page.
+**build time** — in pure Swift, with no client-side JavaScript for those surfaces,
+no web fonts, and no external toolchain: no LaTeX install, no `dvisvgm`, no C
+libraries. The same engine typesets to PDF. Write ordinary Markdown; get a fast,
+self-contained page.
 
 $$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
 
