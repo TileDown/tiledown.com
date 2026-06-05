@@ -2,11 +2,23 @@
 """Live browser smoke checks for the deployed TileDown website."""
 
 import os
+import pathlib
+import re
 import sys
 
 from playwright.sync_api import expect, sync_playwright
 
 
+def _site_version():
+    """Single source of truth: the versionName in content/tiledown.yml."""
+    config = pathlib.Path(__file__).resolve().parent / "content" / "tiledown.yml"
+    match = re.search(r"^versionName:\s*(\S+)", config.read_text(), re.MULTILINE)
+    if not match:
+        raise SystemExit(f"could not find versionName in {config}")
+    return match.group(1)
+
+
+EXPECTED_VERSION = _site_version()
 BASE_URL = os.environ.get("BASE_URL", "https://tiledown.com").rstrip("/")
 UMAMI_SCRIPT = (
     '<script defer src="https://cloud.umami.is/script.js" '
@@ -102,7 +114,7 @@ def main():
 
         page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
         expect(page.locator(".td-brand-title")).to_have_text("TileDown")
-        expect(page.locator(".td-brand-subtitle")).to_have_text("v0.5.1")
+        expect(page.locator(".td-brand-subtitle")).to_have_text(EXPECTED_VERSION)
         expect(page.locator("h1").first).to_have_text("Fresh")
         assert_umami_analytics(page, "/posts/")
         assert_favicon(page)
