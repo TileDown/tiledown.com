@@ -16,6 +16,7 @@ UMAMI_SELECTOR = (
     'script[src="https://cloud.umami.is/script.js"]'
     '[data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"]'
 )
+FAVICON_PATH = "/favicon.ico"
 
 
 def pass_check(name, detail=""):
@@ -33,6 +34,14 @@ def assert_umami_analytics(page, path):
     require(response.status == 200, f"{path} returned {response.status}")
     require(UMAMI_SCRIPT in response.text(), f"{path} missing live Umami analytics script")
     require(page.locator(UMAMI_SELECTOR).count() == 1, f"{path} should render one live Umami script")
+
+
+def assert_favicon(page):
+    expected = f"{BASE_URL}{FAVICON_PATH}"
+    require(page.locator(f'link[rel="icon"][href="{expected}"]').count() == 1, "Missing live favicon link")
+    response = page.request.get(expected)
+    require(response.status == 200, f"{FAVICON_PATH} returned {response.status}")
+    require(bytes(response.body())[:4] == b"\x00\x00\x01\x00", "Live favicon.ico is not an ICO file")
 
 
 def assert_loaded_image(locator, label):
@@ -96,6 +105,7 @@ def main():
         expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
         expect(page.locator("h1").first).to_have_text("Fresh")
         assert_umami_analytics(page, "/posts/")
+        assert_favicon(page)
         expect(page.get_by_role("link", name="TileDown 0.4.1 ships static code color").first).to_be_visible()
         assert_loaded_image(page.locator('img[src*="/assets/post-code-dark.svg"]').first, "code post card")
         broken_images = page.eval_on_selector_all(

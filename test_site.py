@@ -16,6 +16,7 @@ UMAMI_SELECTOR = (
     'script[src="https://cloud.umami.is/script.js"]'
     '[data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"]'
 )
+FAVICON_PATH = "/favicon.ico"
 
 
 def pass_check(name, detail=""):
@@ -33,6 +34,13 @@ def assert_umami_analytics(page, path):
     require(response.status == 200, f"{path} returned {response.status}")
     require(UMAMI_SCRIPT in response.text(), f"{path} missing Umami analytics script")
     require(page.locator(UMAMI_SELECTOR).count() == 1, f"{path} should render one Umami script")
+
+
+def assert_favicon(page, expected_href):
+    require(page.locator(f'link[rel="icon"][href="{expected_href}"]').count() == 1, "Missing favicon link")
+    response = page.request.get(f"{BASE_URL}{FAVICON_PATH}")
+    require(response.status == 200, f"{FAVICON_PATH} returned {response.status}")
+    require(bytes(response.body())[:4] == b"\x00\x00\x01\x00", "favicon.ico is not an ICO file")
 
 
 def click_center(page, locator):
@@ -230,8 +238,9 @@ def main():
         expect(page.locator(".td-brand-title")).to_have_text("TileDown")
         expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
         assert_umami_analytics(page, "/")
+        assert_favicon(page, FAVICON_PATH)
         checks += 1
-        pass_check("home title, version, and analytics", "TileDown v0.4.1")
+        pass_check("home title, version, analytics, and favicon", "TileDown v0.4.1")
 
         home_title = page.locator("h1").first
         title_alignment = home_title.evaluate(

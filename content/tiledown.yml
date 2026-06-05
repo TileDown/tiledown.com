@@ -3,6 +3,7 @@ versionName: v0.4.1
 layout: top-nav
 theme: system
 appearance: toggle
+favicon: /favicon.ico
 rss: true
 rssPath: feed.xml
 rssTitle: TileDown
