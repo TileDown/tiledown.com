@@ -8,6 +8,14 @@ from playwright.sync_api import expect, sync_playwright
 
 
 BASE_URL = os.environ.get("BASE_URL", "http://localhost:8092").rstrip("/")
+UMAMI_SCRIPT = (
+    '<script defer src="https://cloud.umami.is/script.js" '
+    'data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"></script>'
+)
+UMAMI_SELECTOR = (
+    'script[src="https://cloud.umami.is/script.js"]'
+    '[data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"]'
+)
 
 
 def pass_check(name, detail=""):
@@ -18,6 +26,13 @@ def pass_check(name, detail=""):
 def require(condition, message):
     if not condition:
         raise AssertionError(message)
+
+
+def assert_umami_analytics(page, path):
+    response = page.request.get(f"{BASE_URL}{path}")
+    require(response.status == 200, f"{path} returned {response.status}")
+    require(UMAMI_SCRIPT in response.text(), f"{path} missing Umami analytics script")
+    require(page.locator(UMAMI_SELECTOR).count() == 1, f"{path} should render one Umami script")
 
 
 def click_center(page, locator):
@@ -207,14 +222,16 @@ def main():
             "https://www.youtube-nocookie.com/**",
             lambda route: route.fulfill(status=204, body=""),
         )
+        page.route("https://cloud.umami.is/**", lambda route: route.abort())
         page.emulate_media(color_scheme="light")
 
         page.goto(f"{BASE_URL}/", wait_until="networkidle")
         expect(page).to_have_title("TileDown")
         expect(page.locator(".td-brand-title")).to_have_text("TileDown")
         expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
+        assert_umami_analytics(page, "/")
         checks += 1
-        pass_check("home title and version", "TileDown v0.4.1")
+        pass_check("home title, version, and analytics", "TileDown v0.4.1")
 
         home_title = page.locator("h1").first
         title_alignment = home_title.evaluate(
@@ -354,6 +371,7 @@ def main():
 
         page.goto(f"{BASE_URL}/posts/tiledown-0-4-1-static-code-color/", wait_until="networkidle")
         expect(page.locator("h1").first).to_have_text("TileDown 0.4.1 ships static code color")
+        assert_umami_analytics(page, "/posts/tiledown-0-4-1-static-code-color/")
         syntax = page.eval_on_selector(
             "code.language-swift",
             """(code) => {

@@ -8,6 +8,14 @@ from playwright.sync_api import expect, sync_playwright
 
 
 BASE_URL = os.environ.get("BASE_URL", "https://tiledown.com").rstrip("/")
+UMAMI_SCRIPT = (
+    '<script defer src="https://cloud.umami.is/script.js" '
+    'data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"></script>'
+)
+UMAMI_SELECTOR = (
+    'script[src="https://cloud.umami.is/script.js"]'
+    '[data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"]'
+)
 
 
 def pass_check(name, detail=""):
@@ -18,6 +26,13 @@ def pass_check(name, detail=""):
 def require(condition, message):
     if not condition:
         raise AssertionError(message)
+
+
+def assert_umami_analytics(page, path):
+    response = page.request.get(f"{BASE_URL}{path}")
+    require(response.status == 200, f"{path} returned {response.status}")
+    require(UMAMI_SCRIPT in response.text(), f"{path} missing live Umami analytics script")
+    require(page.locator(UMAMI_SELECTOR).count() == 1, f"{path} should render one live Umami script")
 
 
 def assert_loaded_image(locator, label):
@@ -65,6 +80,9 @@ def main():
 
         def route_handler(route):
             url = route.request.url
+            if url.startswith("https://cloud.umami.is/"):
+                route.abort()
+                return
             if url.endswith(".wasm.gz"):
                 blocked_wasm.append(url)
                 route.abort()
@@ -77,6 +95,7 @@ def main():
         expect(page.locator(".td-brand-title")).to_have_text("TileDown")
         expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
         expect(page.locator("h1").first).to_have_text("Fresh")
+        assert_umami_analytics(page, "/posts/")
         expect(page.get_by_role("link", name="TileDown 0.4.1 ships static code color").first).to_be_visible()
         assert_loaded_image(page.locator('img[src*="/assets/post-code-dark.svg"]').first, "code post card")
         broken_images = page.eval_on_selector_all(
@@ -89,6 +108,7 @@ def main():
 
         page.goto(f"{BASE_URL}/posts/tiledown-0-4-1-static-code-color/", wait_until="networkidle")
         expect(page.locator("h1").first).to_have_text("TileDown 0.4.1 ships static code color")
+        assert_umami_analytics(page, "/posts/tiledown-0-4-1-static-code-color/")
         assert_loaded_image(page.locator('img[src*="/assets/post-code-dark.svg"]').first, "code post hero")
         require(page.locator("code.language-swift .tok-keyword").count() >= 1, "Live Swift code has no keyword tokens")
         require(page.locator("code.language-json .tok-property").count() >= 1, "Live JSON code has no property tokens")

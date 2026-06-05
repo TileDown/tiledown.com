@@ -12,7 +12,7 @@ postsLabel: Fresh
 shareLinks: true
 showSource: true
 articlePDF: true
-analytics.head: <style>.td-main>.td-theme-image[aria-label="TileDown"]+h1{margin-inline:auto;text-align:center;}</style>
+analytics.head: <style>.td-main>.td-theme-image[aria-label="TileDown"]+h1{margin-inline:auto;text-align:center;}</style><script defer src="https://cloud.umami.is/script.js" data-website-id="193d757c-9f02-40b0-b59f-cf5332d24f43"></script>
 social.github: https://github.com/TileDown/tile-down
 links.repo: https://github.com/TileDown/tile-down
 links.design: https://github.com/TileDown/tile-down/blob/main/docs/DESIGN.md
