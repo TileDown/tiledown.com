@@ -211,8 +211,10 @@ def main():
 
         page.goto(f"{BASE_URL}/", wait_until="networkidle")
         expect(page).to_have_title("TileDown")
+        expect(page.locator(".td-brand-title")).to_have_text("TileDown")
+        expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
         checks += 1
-        pass_check("home title", "TileDown")
+        pass_check("home title and version", "TileDown v0.4.1")
 
         home_title = page.locator("h1").first
         title_alignment = home_title.evaluate(

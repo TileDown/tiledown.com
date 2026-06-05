@@ -74,6 +74,8 @@ def main():
         page.route("**/*", route_handler)
 
         page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
+        expect(page.locator(".td-brand-title")).to_have_text("TileDown")
+        expect(page.locator(".td-brand-subtitle")).to_have_text("v0.4.1")
         expect(page.locator("h1").first).to_have_text("Fresh")
         expect(page.get_by_role("link", name="TileDown 0.4.1 ships static code color").first).to_be_visible()
         assert_loaded_image(page.locator('img[src*="/assets/post-code-dark.svg"]').first, "code post card")
