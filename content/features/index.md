@@ -84,6 +84,18 @@ tiledown json content/index.md .build/home.json
 
 See [Static Code Color](post:tiledown-0-4-1-static-code-color).
 
+## Per-article PDF
+
+Every post on this site ships a **Download PDF** link. That PDF is typeset at
+build time from the same Markdown source as the HTML page — by the pure-Swift
+MarkdownPDF engine, which shares its math typesetting with the formulas above.
+No headless browser, no print pipeline, no server: the build writes a real,
+valid `%PDF` document, math and all, and serves a few kilobytes of static file.
+
+Because the engine is just Swift, it also compiles to WebAssembly, so the same
+parser and PDF writer can run live in your browser. See
+[The PDF engine, in your browser](post:pdf-in-the-browser).
+
 ## Markdown stays the canonical source
 
 TileDown parses CommonMark through Swift Markdown. Raw HTML is escaped by design,
@@ -143,7 +155,6 @@ from `tiledown.yml`, so this page does not fake a live one. See
 ## What else the build does
 
 - **Theme-aware images** — pair `image` with `imageDark` in front matter; layouts switch hero and card art with the page theme.
-- **Per-article PDF** — `articlePDF` emits a PDF for each post from the same source, math and all.
 - **RSS** — a feed is generated from the dated posts.
 - **Tag AND filtering** — generated tag pages are static URLs; start at [Markdown](/tags/markdown/) and narrow to [Markdown AND Swift](/tags/markdown/swift/).
 - **Outbound redirect shims** — configured links route through `/out/` pages.
