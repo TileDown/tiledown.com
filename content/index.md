@@ -13,6 +13,13 @@ no web fonts, and no external toolchain: no LaTeX install, no `dvisvgm`, no C
 libraries. The same engine typesets to PDF. Write ordinary Markdown; get a fast,
 self-contained page.
 
+[Get TileDown on GitHub](social:github)
+
+```sh
+git clone https://github.com/TileDown/tile-down
+swift run --package-path tile-down/Packages tiledown build-site content/ dist/
+```
+
 $$\int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}$$
 
 That equation is static SVG: view source and there is no script tag and no font

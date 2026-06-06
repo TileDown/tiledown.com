@@ -1,0 +1,52 @@
+/* tiledown.com site overrides.
+   Loaded after the engine's styles.css (via analytics.head), so equal-specificity
+   rules win on source order. Selectors mirror the engine's system theme exactly. */
+
+/* --- Softer dark mode -------------------------------------------------------
+   The system theme's dark background is pure #000, which reads as harsh and
+   gives cards no separation. Use a near-black and lift the elevated/surface
+   tokens so code, blockquotes, tables, and tiles stand off the page. */
+[data-theme="dark"] {
+  --td-bg: #0b0d12;
+  --td-elevated: #161922;
+  --td-surface: rgba(28, 31, 40, 0.86);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --td-bg: #0b0d12;
+    --td-elevated: #161922;
+    --td-surface: rgba(28, 31, 40, 0.86);
+  }
+}
+
+/* --- Embed frame ------------------------------------------------------------
+   Give the embed a deliberate framed surface instead of a bare dark void
+   before the iframe paints. */
+.td-embed-frame {
+  background: var(--td-surface);
+  border: 1px solid var(--td-border);
+  border-radius: var(--td-radius);
+  overflow: hidden;
+}
+
+/* --- Homepage call-to-action ------------------------------------------------
+   Promote the homepage's direct GitHub link (social:github) to a primary
+   button. Body prose elsewhere links the repo via link:repo (/out/repo), so
+   this selector only matches the intended CTA. */
+.td-main p a[href^="https://github.com/TileDown/tile-down"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.6rem;
+  padding: 0.55rem 1.2rem;
+  background: var(--td-accent);
+  color: #fff;
+  border: 1px solid var(--td-accent);
+  border-radius: 0.7rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+.td-main p a[href^="https://github.com/TileDown/tile-down"]:hover {
+  filter: brightness(1.08);
+  color: #fff;
+}
