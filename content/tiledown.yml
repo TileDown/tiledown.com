@@ -1,5 +1,5 @@
 title: TileDown
-versionName: v0.5.1
+versionName: v0.5.2
 layout: top-nav
 theme: system
 appearance: toggle
@@ -9,7 +9,7 @@ rssPath: feed.xml
 rssTitle: TileDown
 rssDescription: Development notes for the TileDown static site generator.
 latestPosts: 3
-postsLabel: Fresh
+postsLabel: Updates
 shareLinks: true
 showSource: true
 articlePDF: true

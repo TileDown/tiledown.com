@@ -1,31 +1,74 @@
 ---
 title: Feature Tour
-description: A live tour of the TileDown features this site can exercise today.
+description: A live, self-rendering tour of TileDown — math, charts, diagrams, and source-code color produced at build time from plain Markdown, plus typed tiles that add behavior to a static page.
 weight: 10
 image: /assets/feature-tour.svg
 imageDark: /assets/feature-tour-dark.svg
 ---
 # Feature Tour
 
-This page is intentionally built from ordinary TileDown Markdown. It exists to
-exercise the user-facing features that already work in the CLI.
+Everything below is rendered by the build from ordinary Markdown. The static
+surfaces — math, charts, the pie, source-code color — ship as SVG and CSS with
+**no client-side JavaScript and no web fonts**. This page is the demo: view
+source and you will find finished output, not a runtime.
 
-## Markdown source
+## Math, typeset at build time
 
-TileDown parses CommonMark through Swift Markdown, then renders through TileKit.
-Raw HTML is escaped by design, so source stays portable and editor-friendly.
+Write TeX in a `$$…$$` block and TileDown typesets it to a self-contained SVG —
+real glyph outlines from Latin Modern Math, parsed in pure Swift. No MathJax, no
+LaTeX install, no `dvisvgm`. The same engine typesets to PDF.
 
-> The Markdown file remains the canonical source. The engine derives rendered
-> HTML, shared CSS, browser JavaScript, JSON, and feeds from that source.
+$$e^{i\pi} + 1 = 0$$
 
-Inline code like `tiledown fmt --check source.md` uses the same theme as code
-blocks. Fenced source blocks are highlighted at build time, so the page ships
-colored spans and CSS instead of a browser highlighter:
+$$\frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
 
-```sh
-tiledown build-site content/ dist/
-tiledown json content/index.md .build/home.json
+More in [Math in Markdown](post:math-in-markdown).
+
+## Charts as static SVG
+
+A fenced `chart` block becomes a static SVG at build time — zero shipped
+JavaScript, identical in every browser. (The numbers are invented; the rendering
+is real.)
+
+```chart
+type: bar
+title: Developer happiness by static site generator
+categories: TileDown, Hugo, Jekyll, Bespoke PHP
+y-label: happy devs (%)
+series: This year = 92, 71, 64, 12
 ```
+
+When a chart needs richer hover, there is an opt-in interactive version. See
+[Charts in Markdown](post:charts-in-markdown) and
+[Interactive Charts](post:interactive-charts).
+
+## Diagrams
+
+A `mermaid` flowchart renders through the themed mermaid runtime, while a `pie`
+renders as a static SVG with no runtime at all:
+
+```mermaid
+graph TD
+  Start[Plain Markdown] --> Build[tiledown build-site]
+  Build --> SVG[Static SVG and CSS]
+  Build --> HTML[Self-contained HTML]
+```
+
+```mermaid
+pie title Where the build minute goes
+  "Compiling" : 3
+  "Waiting" : 1
+  "Doom-scrolling" : 26
+```
+
+More in [Diagrams in Markdown](post:diagrams-in-markdown).
+
+## Source code, colored at build time
+
+Fenced code is highlighted by a Swift tokenizer at build time, so the page ships
+colored spans and shared CSS instead of a browser highlighter. Eighteen
+languages are supported, Swift, Shell, Python, Rust, Go, and TypeScript among
+them:
 
 ```swift
 struct TileDownFeature {
@@ -34,62 +77,74 @@ struct TileDownFeature {
 }
 ```
 
-## Tables, links, and images
+```sh
+tiledown build-site content/ dist/
+tiledown json content/index.md .build/home.json
+```
 
-| Capability | Example on this site |
+See [Static Code Color](post:tiledown-0-4-1-static-code-color).
+
+## Markdown stays the canonical source
+
+TileDown parses CommonMark through Swift Markdown. Raw HTML is escaped by design,
+so the source stays portable and editor-friendly.
+
+> The Markdown file remains the canonical source. The engine derives the rendered
+> HTML, shared CSS, browser JavaScript, JSON, and feeds from that one file.
+
+Typed references resolve at build time from `tiledown.yml` and the content tree:
+
+| Reference | Resolves to |
 |:---|:---|
-| Pages | [](page:docs) resolves from a `page:` reference |
-| Posts | [](post:browser-visible-tiles) resolves from a `post:` reference |
-| Tags | [](tag:Tiles) resolves from a `tag:` reference |
-| Source code | Swift and shell fences render with build-time token colors |
-| Socials | [GitHub](social:github) resolves from `tiledown.yml` |
-| Redirects | [Design notes](link:design) goes through `/out/design/` |
+| `page:` | [](page:docs) |
+| `post:` | [](post:browser-visible-tiles) |
+| `tag:` | [](tag:Tiles) |
+| `social:` | [GitHub](social:github) |
+| `link:` | [Design notes](link:design), through an `/out/` redirect |
 
 ![TileDown mark](/assets/tiledown-mark.svg)
 
-## Typed tiles
+## Tiles: behavior on a static page
 
-The callout tile is static: it emits HTML and CSS but no browser runtime.
+Tiles are typed content blocks. Some are pure static output, some add scoped
+local interactivity, and the next class will reach a backend through a safe
+contract.
+
+The **callout** tile is static — themed HTML and CSS, no runtime:
 
 :::tile callout
 title: Static tile
-body: A callout tile demonstrates typed properties rendered into themed HTML.
+body: A callout emits typed properties as themed HTML, with no browser runtime.
 :::
 
-The counter tile is local: it emits JavaScript, but it does not need a server.
+The **counter** tile is local — it ships a little JavaScript but needs no server:
 
 :::tile counter
 label: Press to test JavaScript
 :::
 
-The embed tile is static and provider-constrained. Authors keep a safe URL in
-Markdown; TileDown emits a responsive iframe.
+The **embed** tile is static and provider-constrained — you keep a safe URL in
+Markdown and TileDown emits one responsive, sandboxed iframe with no script of
+its own, rewriting YouTube links to the privacy-preserving no-cookie domain:
 
 :::tile embed
-url: https://www.youtube.com/watch?v=dQw4w9WgXcQ
-title: TileDown embed demo
+url: https://www.youtube.com/watch?v=jNQXAC9IVRw
+title: The first video ever uploaded to YouTube, for scale
 aspectRatio: 16/9
 :::
 
-## Site generation
+**Next: dynamic tiles backed by a service.** The engine already renders typed
+`service-form` tiles that bind to a service contract and keep credentials off the
+client — think a newsletter signup posting to Mailgun, or a Discord webhook —
+through a server-side proxy route. The remaining work is loading those bindings
+from `tiledown.yml`, so this page does not fake a live one. See
+[Service Contracts Are Next](post:service-contracts).
 
-The site build turns `index.md` files into routes. The top-level folders become
-navigation sections, dated posts feed the updates list and RSS, and post tags
-generate tag filter pages.
+## What else the build does
 
-The build also copies assets verbatim, writes one shared `styles.css`, creates
-redirect shim pages for configured outbound links, and excludes `draft: true`
-pages from the published output.
-
-## Theme-aware page images
-
-Pages can pair `image` with `imageDark` in front matter. Built-in layouts use the
-pair for hero images and post-card thumbnails, switching with the same dark-mode
-rules as the site theme. The homepage image on this site uses that path.
-
-## Tag AND filtering
-
-Generated tag pages are static URLs. Start with the [Markdown tag](/tags/markdown/)
-and select Swift to narrow the listing to [Markdown AND Swift](/tags/markdown/swift/).
-Selected tags stay visible in the tag bar, clicking one removes it from the
-current filter, and Clear returns to the all-articles tag page.
+- **Theme-aware images** — pair `image` with `imageDark` in front matter; layouts switch hero and card art with the page theme.
+- **Per-article PDF** — `articlePDF` emits a PDF for each post from the same source, math and all.
+- **RSS** — a feed is generated from the dated posts.
+- **Tag AND filtering** — generated tag pages are static URLs; start at [Markdown](/tags/markdown/) and narrow to [Markdown AND Swift](/tags/markdown/swift/).
+- **Outbound redirect shims** — configured links route through `/out/` pages.
+- **Drafts excluded** — `draft: true` pages stay out of the published output.

@@ -115,7 +115,7 @@ def main():
         page.goto(f"{BASE_URL}/posts/", wait_until="networkidle")
         expect(page.locator(".td-brand-title")).to_have_text("TileDown")
         expect(page.locator(".td-brand-subtitle")).to_have_text(EXPECTED_VERSION)
-        expect(page.locator("h1").first).to_have_text("Fresh")
+        expect(page.locator("h1").first).to_have_text("Updates")
         assert_umami_analytics(page, "/posts/")
         assert_favicon(page)
         expect(page.get_by_role("link", name="TileDown 0.4.1 ships static code color").first).to_be_visible()
