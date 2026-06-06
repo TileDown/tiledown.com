@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="520" viewBox="0 0 800 520" role="img" aria-label="The PDF engine in your browser demo image in dark mode">
+  <rect width="800" height="520" fill="#000000"/>
+  <rect x="86" y="64" width="628" height="392" rx="28" fill="#171717" stroke="#831843" stroke-width="3"/>
+  <rect x="86" y="64" width="628" height="66" rx="28" fill="#1f1f1f"/>
+  <path d="M86 103h628v27H86z" fill="#1f1f1f"/>
+  <circle cx="128" cy="97" r="10" fill="#ef4444"/>
+  <circle cx="162" cy="97" r="10" fill="#f59e0b"/>
+  <circle cx="196" cy="97" r="10" fill="#10b981"/>
+  <text x="244" y="104" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="18" fill="#6b7280">pdf-playground</text>
+  <rect x="536" y="82" width="150" height="30" rx="15" fill="#2a0d12"/>
+  <text x="611" y="103" text-anchor="middle" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="15" fill="#fb7185">WebAssembly</text>
+  <rect x="110" y="152" width="580" height="282" rx="18" fill="#0a0a0a"/>
+  <rect x="148" y="206" width="152" height="176" rx="18" fill="#2a0d12" stroke="#fb7185" stroke-width="4"/>
+  <rect x="176" y="238" width="92" height="14" rx="7" fill="#e5e7eb"/>
+  <rect x="176" y="272" width="104" height="12" rx="6" fill="#fb7185"/>
+  <rect x="176" y="300" width="78" height="12" rx="6" fill="#9f1239"/>
+  <rect x="176" y="328" width="96" height="12" rx="6" fill="#4c0519"/>
+  <rect x="176" y="356" width="64" height="12" rx="6" fill="#4c0519"/>
+  <path d="M316 294H360" stroke="#94a3b8" stroke-width="12" stroke-linecap="round"/>
+  <path d="M348 276L372 294L348 312" fill="none" stroke="#94a3b8" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="400" y="192" width="164" height="204" rx="18" fill="#1e1e1e" stroke="#831843" stroke-width="3"/>
+  <rect x="400" y="192" width="164" height="46" rx="18" fill="#e11d48"/>
+  <path d="M400 220h164v18H400z" fill="#e11d48"/>
+  <text x="424" y="224" font-family="ui-monospace, SFMono-Regular, Menlo, monospace" font-size="19" font-weight="700" fill="#ffffff">%PDF-1.7</text>
+  <rect x="424" y="262" width="104" height="13" rx="6" fill="#e5e7eb"/>
+  <rect x="424" y="290" width="116" height="11" rx="5" fill="#6b7280"/>
+  <rect x="424" y="314" width="92" height="11" rx="5" fill="#4b5563"/>
+  <rect x="424" y="338" width="108" height="11" rx="5" fill="#4b5563"/>
+  <rect x="424" y="362" width="72" height="11" rx="5" fill="#374151"/>
+</svg>

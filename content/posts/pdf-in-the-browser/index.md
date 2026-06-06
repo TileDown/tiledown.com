@@ -3,6 +3,8 @@ title: The PDF engine, in your browser
 date: 2026-06-03
 description: TileDown builds a typeset PDF of every article at build time with a pure-Swift engine. The same engine compiles to WebAssembly, so you can type Markdown and get a real PDF generated entirely in your browser, no server. Try the playground.
 tags: Swift, WebAssembly, PDF
+image: /assets/post-pdf.svg
+imageDark: /assets/post-pdf-dark.svg
 ---
 # The PDF engine, in your browser
 
