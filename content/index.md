@@ -15,6 +15,15 @@ self-contained page.
 
 [Get TileDown on GitHub](social:github)
 
+Install with Homebrew (Apple Silicon, macOS 14 or later):
+
+```sh
+brew install tiledown/tap/tiledown
+tiledown build-site content/ dist/
+```
+
+Or build from source:
+
 ```sh
 git clone https://github.com/TileDown/tile-down
 swift run --package-path tile-down/Packages tiledown build-site content/ dist/
